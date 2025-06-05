@@ -2,3 +2,4 @@
 {"nome":"Italia","latitude":41.62697100162173,"longitude":2.317751350505765,"descricao":"Visitar o coliseu","ordem":1,"createdAt":{"$$date":1749150402976},"_id":"dNiK5jkJcevUsT2M"}
 {"nome":"Curitiba","latitude":-25.42724374559382,"longitude":-49.266613873306035,"descricao":"Visitar o parque tanguá","ordem":2,"createdAt":{"$$date":1749150422855},"_id":"esrTwvyua1oTy89m"}
 {"nome":"Parque Vila Velha","latitude":-25.2443,"longitude":-50.0039,"descricao":"Ver as formações de arenito e as furnas.","ordem":4,"createdAt":{"$$date":1749150703124},"_id":"omNxSzpA0qSxfnVq"}
+{"nome":"Escócia","latitude":32.492232,"longitude":42.3243,"ordem":5,"createdAt":{"$$date":1749152737702},"_id":"Vd1PXiMnuNDk5zQc"}
