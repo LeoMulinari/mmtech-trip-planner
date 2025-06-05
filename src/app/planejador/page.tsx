@@ -80,6 +80,30 @@ export default function PlanejadorPage() {
             console.error(error);
         }
     };
+
+    // --- NOVA FUNÇÃO PARA DELETAR UM DESTINO ---
+    const handleDelete = async (id: string) => {
+        // Confirmação opcional, mas uma boa prática de UX
+        if (!confirm('Tem certeza que deseja excluir este destino?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/destinos/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao excluir destino');
+            }
+
+            // Após deletar com sucesso, buscamos a lista atualizada e reordenada do backend
+            await fetchDestinos();
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
     
     return (
         <main className="container mx-auto p-8">
@@ -121,14 +145,26 @@ export default function PlanejadorPage() {
                 </button>
             </form>
 
-            <div className="mt-8">
+             <div className="mt-8">
                 <h2 className="text-2xl font-semibold">Seu Roteiro:</h2>
-                {/* 4. Renderizando a lista de destinos */}
-                <ul className="list-disc list-inside mt-4">
+                <ul className="list-inside mt-4 space-y-2"> {/* Adicionei space-y-2 para espaçamento */}
                     {destinos.map((destino) => (
-                        // A 'key' é importante para o React saber identificar cada item da lista
-                        <li key={destino._id} className="text-lg mb-2">
-                            {destino.ordem}. {destino.nome}
+                        <li 
+                            key={destino._id} 
+                            // Usei flexbox para alinhar os itens
+                            className="text-lg flex items-center justify-between p-2 rounded hover:bg-gray-600"
+                        >
+                            <span>{destino.ordem}. {destino.nome}</span>
+                            
+                            {/* --- NOVO BOTÃO DE EXCLUIR --- */}
+                            <button
+                                // É crucial passar o `destino._id` para a função saber qual item deletar
+                                // O '!' é para dizer ao TypeScript que temos certeza que o _id não será undefined
+                                onClick={() => handleDelete(destino._id!)} 
+                                className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                            >
+                                Excluir
+                            </button>
                         </li>
                     ))}
                 </ul>
