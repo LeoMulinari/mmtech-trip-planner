@@ -3,7 +3,7 @@
 // o que nos permite usar hooks como useState e useEffect para interatividade.
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 // Precisamos definir a "forma" de um destino aqui também,
 // para que o TypeScript saiba com que tipo de dados estamos lidando no frontend.
