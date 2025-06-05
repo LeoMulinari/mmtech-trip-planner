@@ -1,16 +1,7 @@
 // src/app/api/destinos/route.ts
-import DataStore from 'nedb';
 import { NextResponse } from 'next/server';
-import path from 'path';
-
-// Caminho para o arquivo do banco de dados
-// Usamos path.join para garantir que funcione em diferentes sistemas operacionais
-// process.cwd() é o diretório raiz do seu projeto Next.js
-const dbFilePath = path.join(process.cwd(), 'database', 'destinos.db');
-
-// Inicializa o NeDB
-// Se o arquivo não existir, ele será criado
-const db = new DataStore({ filename: dbFilePath, autoload: true });
+// IMPORTAMOS NOSSA INSTÂNCIA ÚNICA DO DB
+import db from '@/lib/database';
 
 interface Destino {
     _id?: string;         // Gerado pelo NeDB, opcional no nosso código
@@ -27,7 +18,9 @@ interface Destino {
 export async function GET() {
     try {
         const destinos = await new Promise<Destino[]>((resolve, reject) => {
-            db.find({}).sort({ createdAt: 1 }).exec((err, docs) => {
+            // Usamos .sort({ ordem: 1 }) para garantir que os destinos venham na ordem correta.
+            // O '1' significa ordem ascendente (1, 2, 3, ...).
+            db.find({}).sort({ ordem: 1 }).exec((err, docs) => {
                 if (err) {
                     reject(err);
                     return;
@@ -38,7 +31,7 @@ export async function GET() {
         return NextResponse.json(destinos);
     } catch (error) {
         console.error("Erro ao buscar destinos:", error);
-        return NextResponse.json({ message: 'Erro ao buscar destinos', error }, { status: 500 });
+        return NextResponse.json({ message: 'Erro ao buscar destinos' }, { status: 500 });
     }
 }
 
