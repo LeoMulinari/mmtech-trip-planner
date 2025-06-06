@@ -1,4 +1,4 @@
 {"nome":"Ponta Grossa","latitude":-25.09940752812286,"longitude":-50.165803408255805,"descricao":"Visitar o lago de olarias","ordem":2,"createdAt":{"$$date":1749150456106},"_id":"CytMxsBkDClL98o6"}
-{"nome":"Ipiranga","latitude":-25.02471,"longitude":-50.58408,"ordem":4,"createdAt":{"$$date":1749163620848},"_id":"F51vV6NyffeOX1kT"}
 {"nome":"Curitiba","latitude":-25.42724374559382,"longitude":-49.266613873306035,"descricao":"Visitar o parque tanguá","ordem":1,"createdAt":{"$$date":1749150422855},"_id":"esrTwvyua1oTy89m"}
-{"nome":"Parque Vila Velha","latitude":-25.2443,"longitude":-50.0039,"descricao":"Ver as formações de arenito e as furnas.","ordem":3,"createdAt":{"$$date":1749150703124},"_id":"omNxSzpA0qSxfnVq"}
+{"nome":"São Paulo","latitude":-23.555308870176624,"longitude":-46.63895683067133,"ordem":3,"createdAt":{"$$date":1749169436912},"_id":"o0bveUYlu1FkaBl0"}
+{"nome":"Ipiranga","latitude":-25.02471,"longitude":-50.58408,"ordem":4,"createdAt":{"$$date":1749169713135},"_id":"oRxlUbpmIYjJn4fI"}

@@ -46,15 +46,15 @@ export async function POST(request: Request) {
             const origem = destinos[i];
             const destino = destinos[i + 1];
 
-            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origem.nome)}&destination=${encodeURIComponent(destino.nome)}&key=${apiKey}&language=pt-BR`;
-
+            // Trocamos os nomes pelas coordenadas no formato "latitude,longitude"
+            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origem.latitude},${origem.longitude}&destination=${destino.latitude},${destino.longitude}&key=${apiKey}&language=pt-BR`;
             const googleResponse = await fetch(url);
             const data = await googleResponse.json();
 
+           // A verificação de status continua, mas sem os logs
             if (data.status !== 'OK' || !data.routes[0]?.legs[0]) {
-                // Pula este trecho se a API do Google não encontrar uma rota
-                console.warn(`Não foi possível encontrar rota entre ${origem.nome} e ${destino.nome}`);
-                continue;
+                console.warn(`Não foi possível encontrar rota entre ${origem.nome} e ${destino.nome}. Verifique as coordenadas.`);
+                continue; 
             }
 
             const leg = data.routes[0].legs[0];
