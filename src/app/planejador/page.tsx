@@ -23,6 +23,7 @@ interface RotaData {
         destino: string;
         distancia: string;
         duracao: string;
+        tipo: 'CARRO' | 'VOO_OU_LONGA_DISTANCIA';
     }[];
     distanciaTotal: number;
     duracaoTotal: number;
@@ -210,16 +211,27 @@ export default function PlanejadorPage() {
                         <div className="mt-4 space-y-4">
                             {rota.trechos.map((trecho, index) => (
                                 <div key={index} className="p-2 border-b">
-                                    <p><strong>De:</strong> {trecho.origem}</p>
-                                    <p><strong>Para:</strong> {trecho.destino}</p>
-                                    <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
+                                    <p><strong>De:</strong> {trecho.origem.split(',')[0]}</p>
+                                    <p><strong>Para:</strong> {trecho.destino.split(',')[0]}</p>
+                                    {/* Renderização Condicional Baseada no Tipo */}
+                                    {trecho.tipo === 'CARRO' ? (
+                                        <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
+                                    ) : (
+                                        <p className="text-blue-500 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
+                                    )}
                                 </div>
                             ))}
-                            <div className="mt-4 p-4 bg-gray-600 rounded-lg">
-                                <p className="text-lg font-bold">Distância Total: {formatarDistancia(rota.distanciaTotal)}</p>
-                                <p className="text-lg font-bold">Duração Total: {formatarDuracao(rota.duracaoTotal)}</p>
-                            </div>
-                        </div>
+                            
+                            {/* --- CONDIÇÃO CORRIGIDA AQUI --- */}
+                            {rota && rota.distanciaTotal > 0 && (
+                                <div className="mt-4 p-4 bg-gray-600 rounded-lg">
+                                    {/* Mudei o título para ser mais claro para o usuário */}
+                                    <p className="text-lg font-bold">Resumo da Viagem (Apenas Trechos Terrestres):</p>
+                                    <p className="mt-2">Distância Total Calculada: {formatarDistancia(rota.distanciaTotal)}</p>
+                                    <p>Duração Total Calculada: {formatarDuracao(rota.duracaoTotal)}</p>
+                                </div>
+                            )}
+                        </div>      
                     )}
                     {destinos.length < 2 && !isLoadingRota && (<p className="mt-4 text-gray-500">Adicione pelo menos mais um destino para calcular a rota.</p>)}
                 </div>

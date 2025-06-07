@@ -17,6 +17,7 @@ interface RotaResponse {
         destino: string;
         distancia: string;
         duracao: string;
+        tipo: 'CARRO' | 'VOO_OU_LONGA_DISTANCIA'; // Novo campo para identificar o trecho
     }[];
     distanciaTotal: number; // em metros
     duracaoTotal: number; // em segundos
@@ -51,9 +52,16 @@ export async function POST(request: Request) {
             const googleResponse = await fetch(url);
             const data = await googleResponse.json();
 
-           // A verificação de status continua, mas sem os logs
+           // SE NÃO HOUVER ROTA, tratamos como um trecho de longa distância
             if (data.status !== 'OK' || !data.routes[0]?.legs[0]) {
-                console.warn(`Não foi possível encontrar rota entre ${origem.nome} e ${destino.nome}. Verifique as coordenadas.`);
+                console.warn(`Não foi possível encontrar rota terrestre entre ${origem.nome} e ${destino.nome}.`);
+                response.trechos.push({
+                    origem: origem.nome,
+                    destino: destino.nome,
+                    distancia: "N/A",
+                    duracao: "N/A",
+                    tipo: 'VOO_OU_LONGA_DISTANCIA', // Usamos nosso tipo especial
+                });
                 continue; 
             }
 
@@ -61,9 +69,10 @@ export async function POST(request: Request) {
             
             response.trechos.push({
                 origem: origem.nome,
-                destino: destino.nome, 
-                distancia: leg.distance.text, // "115 km"
-                duracao: leg.duration.text,   // "1 hora 45 minutos"
+                destino: destino.nome,
+                distancia: leg.distance.text,
+                duracao: leg.duration.text,
+                tipo: 'CARRO', // É uma rota de carro normal
             });
             
             response.distanciaTotal += leg.distance.value; // valor em metros

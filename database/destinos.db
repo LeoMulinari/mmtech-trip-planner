@@ -1,7 +1,9 @@
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":4,"createdAt":{"$$date":1749326496173},"_id":"00gRpZixfo90NM0r"}
 {"nome":"Roma, Lácio, Itália","latitude":41.8967068,"longitude":12.4822025,"ordem":1,"createdAt":{"$$date":1749324050812},"_id":"JbOkZdSE1G9ybea1"}
-{"nome":"Paris, IDF, França","latitude":48.8575475,"longitude":2.3513765,"ordem":2,"createdAt":{"$$date":1749324055527},"_id":"efJP6xc9H4qqBGXb"}
+{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":5,"createdAt":{"$$date":1749326540741},"_id":"XqbmbE9a218Qni7B"}
 {"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":3,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
-{"nome":"Residencial Jardim das Araucárias, Ponta Grossa, PR, Brasil","latitude":-25.088432,"longitude":-50.0977891,"ordem":4,"createdAt":{"$$date":1749324099067},"_id":"XpRrfNNK4RqpCSLX"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":5,"createdAt":{"$$date":1749324107022},"_id":"qwdwlsYR6KsWFDnd"}
-{"nome":"Parque Vila Velha, Ponta Grossa, PR, Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":6,"createdAt":{"$$date":1749324122427},"_id":"LL0lULvdmnnvraKn"}
-{"nome":"Condomínio Inova, Ponta Grossa, PR, Brasil","latitude":-25.1092614,"longitude":-50.12416710000001,"ordem":7,"createdAt":{"$$date":1749324141226},"_id":"B6z0s5fyoPAWsFPZ"}
+{"nome":"Paris, IDF, França","latitude":48.8575475,"longitude":2.3513765,"ordem":2,"createdAt":{"$$date":1749324055527},"_id":"efJP6xc9H4qqBGXb"}
+{"nome":"Nova York, Nova Iorque, NY, Estados Unidos","latitude":40.7127753,"longitude":-74.0059728,"ordem":6,"createdAt":{"$$date":1749326667406},"_id":"Ce5SS9MIHbEfyPZl"}
+{"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":7,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
+{"nome":"França","latitude":46.227638,"longitude":2.213749,"ordem":8,"createdAt":{"$$date":1749326698051},"_id":"L6c00eiWTtuo3amu"}
+{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":9,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
