@@ -48,7 +48,7 @@ export async function POST(request: Request) {
             const destino = destinos[i + 1];
 
             // Trocamos os nomes pelas coordenadas no formato "latitude,longitude"
-            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origem.latitude},${origem.longitude}&destination=${destino.latitude},${destino.longitude}&key=${apiKey}&language=pt-BR`;
+            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origem.latitude},${origem.longitude}&destination=${destino.latitude},${destino.longitude}&key=${apiKey}&language=pt-BR&units=metric`;
             const googleResponse = await fetch(url);
             const data = await googleResponse.json();
 
