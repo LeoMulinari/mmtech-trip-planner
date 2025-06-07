@@ -7,6 +7,24 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from 'use-places-autocomplete';
 
+// --- NOVAS IMPORTAÇÕES DO DND-KIT ---
+import { SortableItem } from '@/components/SortableItem';
+import {
+    closestCenter,
+    DndContext,
+    DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
 // --- INTERFACES ---
 interface Destino {
     _id?: string;
@@ -92,6 +110,56 @@ export default function PlanejadorPage() {
         setValue,
         clearSuggestions,
     } = usePlacesAutocomplete({ requestOptions: {}, debounce: 300 });
+
+    // --- SENSORES PARA O DND-KIT ---
+    // Permite o drag and drop com o mouse e com o teclado (para acessibilidade)
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+          coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    // --- NOVA FUNÇÃO onDragEnd ---
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            setDestinos((items) => {
+                const oldIndex = items.findIndex((item) => item._id === active.id);
+                const newIndex = items.findIndex((item) => item._id === over.id);
+                
+                // Função auxiliar da dnd-kit que reordena o array para nós
+                const reorderedItems = arrayMove(items, oldIndex, newIndex);
+                
+                // Atualiza a propriedade 'ordem' de cada item
+                const updatedDestinos = reorderedItems.map((item, index) => ({
+                    ...item,
+                    ordem: index + 1,
+                }));
+
+                // Avisa o backend para salvar a nova ordem
+                updateOrdemNoBackend(updatedDestinos);
+
+                return updatedDestinos;
+            });
+        }
+    };
+    
+    // --- SUA FUNÇÃO PARA FALAR COM O BACKEND (NÃO MUDA NADA!) ---
+    const updateOrdemNoBackend = async (novosDestinos: Destino[]) => {
+        try {
+            await fetch('/api/destinos/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ destinos: novosDestinos }),
+            });
+        } catch (error) {
+            console.error("Erro ao salvar a nova ordem:", error);
+            // Opcional: aqui você poderia mostrar um alerta de erro para o usuário
+            // e reverter a lista para o estado anterior para manter a consistência.
+        }
+    };
 
     const fetchDestinos = async () => {
         try {
@@ -195,14 +263,34 @@ export default function PlanejadorPage() {
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <h2 className="text-2xl font-semibold">Seu Roteiro:</h2>
-                    <ul className="list-inside mt-4 space-y-2">
-                        {destinos.map((destino) => (
-                            <li key={destino._id} className="text-lg flex items-center justify-between p-2 rounded hover:bg-gray-600" title={destino.nome}>
-                                <span>{destino.ordem}. {destino.nome}</span>
-                                <button onClick={() => handleDelete(destino._id!)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Excluir</button>
-                            </li>
-                        ))}
-                    </ul>
+                    
+                    {/* --- ATUALIZAÇÃO NA LISTA PARA USAR DND-KIT --- */}
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            // Passamos um array de IDs para o contexto
+                            items={destinos.map(d => d._id!)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <ul className="list-inside mt-4 space-y-2">
+                                {destinos.map((destino) => (
+                                    <SortableItem key={destino._id} id={destino._id!}>
+                                        {/* O conteúdo visual do item da lista fica aqui dentro */}
+                                        <div
+                                            className="text-lg flex items-center justify-between p-2 rounded bg-gray-700 hover:bg-gray-600 cursor-grab"
+                                            title={destino.nome}
+                                        >
+                                            <span>{destino.ordem}. {destino.nome}</span>
+                                            <button onClick={() => handleDelete(destino._id!)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Excluir</button>
+                                        </div>
+                                    </SortableItem>
+                                ))}
+                            </ul>
+                        </SortableContext>
+                    </DndContext>
                 </div>
                 <div>
                     <h2 className="text-2xl font-semibold">Detalhes da Rota:</h2>
