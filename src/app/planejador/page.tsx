@@ -100,9 +100,10 @@ export default function PlanejadorPage() {
     } = usePlacesAutocomplete({
         requestOptions: {
             /* Defina a localização para dar preferência a resultados próximos */
-            location: new google.maps.LatLng(-25.095, -50.163), // Coordenadas de Ponta Grossa
-            radius: 200 * 1000, // Raio de 200km
-            componentRestrictions: { country: 'br' }, // Restringe ao Brasil
+            //location: new google.maps.LatLng(-25.095, -50.163), // Coordenadas de Ponta Grossa
+            //radius: 200 * 1000, // Raio de 200km
+            //componentRestrictions: { country: 'br' }, // Restringe ao Brasil
+            //language: 'en',
         },
         debounce: 300, // Atraso para não fazer uma chamada a cada tecla
     });

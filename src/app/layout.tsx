@@ -18,6 +18,8 @@ export default function RootLayout({
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_Maps_API_KEY!,
     libraries,
+    //language: 'en', // Força o idioma para inglês (ajuda na neutralidade)
+    //region: 'US',   // Força a região para os EUA (um padrão neutro comum)
   });
 
   // Em caso de erro, renderiza a estrutura completa com a mensagem de erro
