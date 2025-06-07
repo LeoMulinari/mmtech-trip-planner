@@ -45,6 +45,39 @@ interface SelectedPlace {
     nomeSimples: string;
 }
 
+// --- NOVA FUNÇÃO ASSISTENTE PARA FORMATAR O NOME ---
+const formatarNomeSimples = (addressComponents: google.maps.GeocoderAddressComponent[]): string => {
+    // Função auxiliar para encontrar um componente pelo seu tipo
+    const getComponent = (type: string) => addressComponents.find(comp => comp.types.includes(type));
+
+    // Pega as partes que nos interessam
+    const pointOfInterest = getComponent('point_of_interest') || getComponent('establishment') || addressComponents[0];
+    
+    // Lógica aprimorada para encontrar a cidade
+    // Tenta 'locality' primeiro, se não achar, tenta 'administrative_area_level_2' (município)
+    const city = getComponent('locality') || getComponent('administrative_area_level_2');
+    
+    const state = getComponent('administrative_area_level_1');
+    const country = getComponent('country');
+    
+    const poiName = pointOfInterest?.long_name || '';
+    const cityName = city?.long_name || '';
+    const stateShortName = state?.short_name || '';
+    const countryName = country?.long_name || '';
+
+    // Montagem final
+    if (poiName === cityName || poiName === countryName) {
+        // Se o local principal é a própria cidade ou país, retorna "Cidade, Estado - País"
+        // Ex: "Ponta Grossa, PR - Brasil"
+        return [cityName, stateShortName].filter(Boolean).join(', ') + (countryName ? ` - ${countryName}` : '');
+    } else {
+        // Se for um ponto de interesse, retorna "Ponto de Interesse, Cidade, Estado - País"
+        // Ex: "Parque Vila Velha, Ponta Grossa, PR - Brasil"
+        const locationInfo = [cityName, stateShortName].filter(Boolean).join(', ');
+        return [poiName, locationInfo].filter(Boolean).join(', ') + (countryName ? ` - ${countryName}` : '');
+    }
+};
+
 export default function PlanejadorPage() {
     // 1. Criamos um estado para armazenar a lista de destinos
     const [destinos, setDestinos] = useState<Destino[]>([]);
@@ -82,7 +115,7 @@ export default function PlanejadorPage() {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
             // Extraímos o nome específico do primeiro componente do endereço
-            const nomeSimples = results[0].address_components[0].long_name;
+            const nomeSimples = formatarNomeSimples(results[0].address_components);
         
             // Guardamos todos os dados necessários no nosso estado temporário
             setSelectedPlace({ address: address, lat, lng, nomeSimples: nomeSimples });

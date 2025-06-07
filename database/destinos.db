@@ -1,8 +1,3 @@
-{"nome":"Ponta Grossa","latitude":-25.09940752812286,"longitude":-50.165803408255805,"descricao":"Visitar o lago de olarias","ordem":2,"createdAt":{"$$date":1749150456106},"_id":"CytMxsBkDClL98o6"}
-{"nome":"Curitiba","latitude":-25.42724374559382,"longitude":-49.266613873306035,"descricao":"Visitar o parque tanguá","ordem":1,"createdAt":{"$$date":1749150422855},"_id":"esrTwvyua1oTy89m"}
-{"nome":"São Paulo","latitude":-23.555308870176624,"longitude":-46.63895683067133,"ordem":3,"createdAt":{"$$date":1749169436912},"_id":"o0bveUYlu1FkaBl0"}
-{"nome":"Ipiranga","latitude":-25.02471,"longitude":-50.58408,"ordem":4,"createdAt":{"$$date":1749169713135},"_id":"oRxlUbpmIYjJn4fI"}
-{"nome":"Palmeira, PR, Brasil","latitude":-25.4197196,"longitude":-50.000433,"ordem":5,"createdAt":{"$$date":1749270205129},"_id":"6Xz0khp5dUcx6eLs"}
-{"nome":"Parque Vila Velha - Vila Velha, Ponta Grossa - PR, Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":6,"createdAt":{"$$date":1749270629727},"_id":"Hfe5bazUQBdypOpR"}
-{"nome":"Apucarana, PR, Brasil","latitude":-23.5525322,"longitude":-51.4638893,"ordem":7,"createdAt":{"$$date":1749271104993},"_id":"IEOXMbt5PetynTU7"}
-{"nomeCompleto":"Arapoti, PR, Brasil","nomeSimples":"Arapoti","latitude":-24.1445773,"longitude":-49.8245183,"ordem":8,"createdAt":{"$$date":1749272195280},"_id":"fz8iBEBED1EbiGfP"}
+{"nomeCompleto":"Curitiba, PR, Brasil","nomeSimples":"Curitiba, PR - Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":2,"createdAt":{"$$date":1749273342117},"_id":"C4qKFp9rBMxkgXPn"}
+{"nomeCompleto":"Parque Tanguá - Rua Oswaldo Maciel - Taboão, Curitiba - PR, Brasil","nomeSimples":"Parque Tanguá, Curitiba, PR - Brasil","latitude":-25.3790661,"longitude":-49.2824233,"ordem":3,"createdAt":{"$$date":1749273353603},"_id":"VWSpypVazhYvxvym"}
+{"nomeCompleto":"Parque Vila Velha - Vila Velha, Ponta Grossa - PR, Brasil","nomeSimples":"Parque Vila Velha, Ponta Grossa, PR - Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":1,"createdAt":{"$$date":1749273332114},"_id":"tfyD37sn9qwFn6OM"}
