@@ -5,7 +5,8 @@ import db from '@/lib/database';
 
 interface Destino {
     _id?: string;         // Gerado pelo NeDB, opcional no nosso código
-    nome: string;
+    nomeCompleto: string; // Ex: "Parque Vila Velha, Ponta Grossa - PR, Brasil"
+    nomeSimples: string;  // Ex: "Parque Vila Velha"
     latitude: number;
     longitude: number;
     ordem: number;
@@ -41,7 +42,8 @@ export async function POST(request: Request) {
         // 1. Recebe os dados do frontend.
         // Esperamos que o frontend envie nome, lat, lon e opcionalmente descricao/imageUrl
         const body = await request.json() as {
-            nome: string;
+            nomeCompleto: string;
+            nomeSimples: string;
             latitude: number;
             longitude: number;
             descricao?: string;
@@ -49,7 +51,7 @@ export async function POST(request: Request) {
         };
 
         // 2. Validação básica
-        if (!body.nome || body.latitude === undefined || body.longitude === undefined) {
+        if (!body.nomeCompleto || !body.nomeSimples ||  body.latitude === undefined || body.longitude === undefined) {
             return NextResponse.json({ message: 'Campos nome, latitude e longitude são obrigatórios' }, { status: 400 });
         }
 
@@ -64,7 +66,8 @@ export async function POST(request: Request) {
 
         // 4. Cria o objeto completo do novo destino
         const novoDestino: Destino = {
-            nome: body.nome,
+            nomeCompleto: body.nomeCompleto,
+            nomeSimples: body.nomeSimples,
             latitude: body.latitude,
             longitude: body.longitude,
             descricao: body.descricao, // Será undefined se não for enviado

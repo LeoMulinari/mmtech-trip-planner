@@ -15,7 +15,8 @@ import usePlacesAutocomplete, {
 // para que o TypeScript saiba com que tipo de dados estamos lidando no frontend.
 interface Destino {
     _id?: string;
-    nome: string;
+    nomeCompleto: string; // Ex: "Parque Vila Velha, Ponta Grossa - PR, Brasil"
+    nomeSimples: string;  // Ex: "Parque Vila Velha"
     latitude: number;
     longitude: number;
     ordem: number;
@@ -41,6 +42,7 @@ interface SelectedPlace {
     address: string;
     lat: number;
     lng: number;
+    nomeSimples: string;
 }
 
 export default function PlanejadorPage() {
@@ -79,33 +81,38 @@ export default function PlanejadorPage() {
         try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            setSelectedPlace({ address, lat, lng }); // Guarda os dados no nosso novo estado
+            // Extraímos o nome específico do primeiro componente do endereço
+            const nomeSimples = results[0].address_components[0].long_name;
+        
+            // Guardamos todos os dados necessários no nosso estado temporário
+            setSelectedPlace({ address: address, lat, lng, nomeSimples: nomeSimples });
+
         } catch (error) {
             console.error("Erro ao obter coordenadas: ", error);
         }
     };
 
     // Função que efetivamente chama nossa API
-    const adicionarDestino = async (nome: string, latitude: number, longitude: number) => {
-        try {
-            const response = await fetch('/api/destinos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, latitude, longitude }),
-            });
-            if (!response.ok) throw new Error('Erro ao adicionar destino');
-            setValue(""); // Limpa o campo de autocomplete
-            await fetchDestinos();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const adicionarDestino = async (nomeCompleto: string, nomeSimples: string, latitude: number, longitude: number) => {
+    try {
+        const response = await fetch('/api/destinos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            // Enviamos os dois nomes no corpo da requisição
+            body: JSON.stringify({ nomeCompleto, nomeSimples, latitude, longitude }),
+        });
+        if (!response.ok) throw new Error('Erro ao adicionar destino');
+        await fetchDestinos();
+    } catch (error) {
+        console.error(error);
+    }
+};
 
     // --- NOVA FUNÇÃO para o clique do botão "Adicionar" ---
     const handleAddClick = () => {
         if (!selectedPlace) return; // Não faz nada se nenhum lugar foi selecionado
 
-        adicionarDestino(selectedPlace.address, selectedPlace.lat, selectedPlace.lng);
+        adicionarDestino(selectedPlace.address, selectedPlace.nomeSimples, selectedPlace.lat, selectedPlace.lng);
         
         // Limpa tudo para a próxima adição
         setValue("");
@@ -260,8 +267,9 @@ export default function PlanejadorPage() {
                                 key={destino._id} 
                                 // Usei flexbox para alinhar os itens
                                 className="text-lg flex items-center justify-between p-2 rounded hover:bg-gray-600"
+                                title={destino.nomeCompleto} 
                             >
-                                <span>{destino.ordem}. {destino.nome}</span>
+                                <span>{destino.ordem}. {destino.nomeSimples}</span>
                                 
                                 {/* --- NOVO BOTÃO DE EXCLUIR --- */}
                                 <button

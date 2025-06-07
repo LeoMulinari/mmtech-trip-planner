@@ -5,3 +5,4 @@
 {"nome":"Palmeira, PR, Brasil","latitude":-25.4197196,"longitude":-50.000433,"ordem":5,"createdAt":{"$$date":1749270205129},"_id":"6Xz0khp5dUcx6eLs"}
 {"nome":"Parque Vila Velha - Vila Velha, Ponta Grossa - PR, Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":6,"createdAt":{"$$date":1749270629727},"_id":"Hfe5bazUQBdypOpR"}
 {"nome":"Apucarana, PR, Brasil","latitude":-23.5525322,"longitude":-51.4638893,"ordem":7,"createdAt":{"$$date":1749271104993},"_id":"IEOXMbt5PetynTU7"}
+{"nomeCompleto":"Arapoti, PR, Brasil","nomeSimples":"Arapoti","latitude":-24.1445773,"longitude":-49.8245183,"ordem":8,"createdAt":{"$$date":1749272195280},"_id":"fz8iBEBED1EbiGfP"}
