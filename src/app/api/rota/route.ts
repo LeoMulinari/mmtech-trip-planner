@@ -30,7 +30,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: 'São necessários pelo menos dois destinos para calcular uma rota.' }, { status: 400 });
         }
 
-        const apiKey = process.env.Maps_API_KEY;
+        const apiKey = process.env.NEXT_PUBLIC_Maps_API_KEY; 
         if (!apiKey) {
             throw new Error('A chave de API do Google Maps não foi configurada.');
         }

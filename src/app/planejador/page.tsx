@@ -3,7 +3,13 @@
 // o que nos permite usar hooks como useState e useEffect para interatividade.
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+// --- NOVAS IMPORTAÇÕES ---
+import usePlacesAutocomplete, {
+    getGeocode,
+    getLatLng,
+} from "use-places-autocomplete";
 
 // Precisamos definir a "forma" de um destino aqui também,
 // para que o TypeScript saiba com que tipo de dados estamos lidando no frontend.
@@ -34,14 +40,62 @@ export default function PlanejadorPage() {
     // 1. Criamos um estado para armazenar a lista de destinos
     const [destinos, setDestinos] = useState<Destino[]>([]);
 
-    // --- NOVOS ESTADOS PARA O FORMULÁRIO ---
-    const [nome, setNome] = useState('');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
-
     // --- NOVOS ESTADOS PARA A ROTA ---
     const [rota, setRota] = useState<RotaData | null>(null);
     const [isLoadingRota, setIsLoadingRota] = useState(false);
+
+    // --- LÓGICA DO AUTOCOMPLETE ---
+    const {
+        ready,
+        value,
+        suggestions: { status, data },
+        setValue,
+        clearSuggestions,
+    } = usePlacesAutocomplete({
+        requestOptions: {
+            /* Defina a localização para dar preferência a resultados próximos */
+            location: new google.maps.LatLng(-25.095, -50.163), // Coordenadas de Ponta Grossa
+            radius: 200 * 1000, // Raio de 200km
+            componentRestrictions: { country: 'br' }, // Restringe ao Brasil
+        },
+        debounce: 300, // Atraso para não fazer uma chamada a cada tecla
+    });
+
+    const handleSelect = async (address: string) => {
+        setValue(address, false); // Atualiza o campo de input com o endereço selecionado
+        clearSuggestions(); // Limpa a lista de sugestões
+
+        try {
+            const results = await getGeocode({ address });
+            const { lat, lng } = await getLatLng(results[0]);
+            
+            // Agora que temos tudo, chamamos a função para adicionar o destino
+            adicionarDestino(address, lat, lng);
+        } catch (error) {
+            console.error("Erro ao obter coordenadas: ", error);
+        }
+    };
+
+    // Função que efetivamente chama nossa API
+    const adicionarDestino = async (nome: string, latitude: number, longitude: number) => {
+        try {
+            const response = await fetch('/api/destinos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, latitude, longitude }),
+            });
+            if (!response.ok) throw new Error('Erro ao adicionar destino');
+            setValue(""); // Limpa o campo de autocomplete
+            await fetchDestinos();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+
+
+
 
     // 2. Função para buscar os dados da nossa API
     const fetchDestinos = async () => {
@@ -63,39 +117,7 @@ export default function PlanejadorPage() {
         fetchDestinos();
     }, []);
 
-    // --- NOVA FUNÇÃO PARA LIDAR COM O SUBMIT DO FORMULÁRIO ---
-    const handleSubmit = async (event: FormEvent) => {
-        // Previne o comportamento padrão do formulário de recarregar a página
-        event.preventDefault();
-
-        try {
-            const response = await fetch('/api/destinos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    nome,
-                    // Convertemos para número antes de enviar
-                    latitude: parseFloat(latitude), 
-                    longitude: parseFloat(longitude),
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao adicionar destino');
-            }
-
-            // Limpa os campos do formulário
-            setNome('');
-            setLatitude('');
-            setLongitude('');
-            
-            // Re-busca a lista de destinos para atualizar a tela com o novo item
-            await fetchDestinos();
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    
 
     // --- NOVA FUNÇÃO PARA DELETAR UM DESTINO ---
     const handleDelete = async (id: string) => {
@@ -165,41 +187,35 @@ export default function PlanejadorPage() {
         <main className="container mx-auto p-8">
             <h1 className="text-4xl font-bold mb-6">Planejador de Viagem</h1>
 
-            {/* --- SEÇÃO DO FORMULÁRIO --- */}
-            <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
+            {/* --- FORMULÁRIO ATUALIZADO --- */}
+            <div className="p-4 border rounded-lg relative"> {/* 'relative' é importante para a lista de sugestões */}
                 <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input
-                        type="text"
-                        placeholder="Nome do Destino"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    />
-                    <input
-                        type="number"
-                        step="any" // Permite decimais
-                        placeholder="Latitude"
-                        value={latitude}
-                        onChange={(e) => setLatitude(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    />
-                    <input
-                        type="number"
-                        step="any"
-                        placeholder="Longitude"
-                        value={longitude}
-                        onChange={(e) => setLongitude(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    />
-                </div>
-                <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Adicionar
-                </button>
-            </form>
+                
+                {/* Nosso novo campo de input */}
+                <input
+                    type="text"
+                    placeholder="Digite o nome de uma cidade..."
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    disabled={!ready} // Desabilita o campo até o script do Google carregar
+                    className="p-2 border rounded w-full"
+                />
+                
+                {/* Lista de sugestões */}
+                {status === "OK" && (
+                    <ul className="absolute z-10 w-full bg-black border rounded mt-1">
+                        {data.map(({ place_id, description }) => (
+                            <li 
+                                key={place_id} 
+                                onClick={() => handleSelect(description)}
+                                className="p-2 hover:bg-gray-600 cursor-pointer"
+                            >
+                                {description}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
