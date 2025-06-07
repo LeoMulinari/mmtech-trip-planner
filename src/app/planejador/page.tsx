@@ -36,6 +36,13 @@ interface RotaData {
     duracaoTotal: number;
 }
 
+// --- (OPCIONAL, MAS RECOMENDADO) Interface para o local selecionado ---
+interface SelectedPlace {
+    address: string;
+    lat: number;
+    lng: number;
+}
+
 export default function PlanejadorPage() {
     // 1. Criamos um estado para armazenar a lista de destinos
     const [destinos, setDestinos] = useState<Destino[]>([]);
@@ -43,6 +50,10 @@ export default function PlanejadorPage() {
     // --- NOVOS ESTADOS PARA A ROTA ---
     const [rota, setRota] = useState<RotaData | null>(null);
     const [isLoadingRota, setIsLoadingRota] = useState(false);
+
+     // --- NOVO ESTADO para guardar o local selecionado temporariamente ---
+    const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
+
 
     // --- LÓGICA DO AUTOCOMPLETE ---
     const {
@@ -62,15 +73,13 @@ export default function PlanejadorPage() {
     });
 
     const handleSelect = async (address: string) => {
-        setValue(address, false); // Atualiza o campo de input com o endereço selecionado
+        setValue(address, false); // Atualiza o campo de input
         clearSuggestions(); // Limpa a lista de sugestões
 
         try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            
-            // Agora que temos tudo, chamamos a função para adicionar o destino
-            adicionarDestino(address, lat, lng);
+            setSelectedPlace({ address, lat, lng }); // Guarda os dados no nosso novo estado
         } catch (error) {
             console.error("Erro ao obter coordenadas: ", error);
         }
@@ -92,9 +101,16 @@ export default function PlanejadorPage() {
         }
     };
 
+    // --- NOVA FUNÇÃO para o clique do botão "Adicionar" ---
+    const handleAddClick = () => {
+        if (!selectedPlace) return; // Não faz nada se nenhum lugar foi selecionado
 
-
-
+        adicionarDestino(selectedPlace.address, selectedPlace.lat, selectedPlace.lng);
+        
+        // Limpa tudo para a próxima adição
+        setValue("");
+        setSelectedPlace(null);
+    };
 
 
     // 2. Função para buscar os dados da nossa API
@@ -188,33 +204,51 @@ export default function PlanejadorPage() {
             <h1 className="text-4xl font-bold mb-6">Planejador de Viagem</h1>
 
             {/* --- FORMULÁRIO ATUALIZADO --- */}
-            <div className="p-4 border rounded-lg relative"> {/* 'relative' é importante para a lista de sugestões */}
+            <div className="p-4 border rounded-lg"> {/* 'relative' é importante para a lista de sugestões */}
                 <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
                 
-                {/* Nosso novo campo de input */}
-                <input
-                    type="text"
-                    placeholder="Digite o nome de uma cidade..."
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    disabled={!ready} // Desabilita o campo até o script do Google carregar
-                    className="p-2 border rounded w-full"
-                />
-                
-                {/* Lista de sugestões */}
-                {status === "OK" && (
-                    <ul className="absolute z-10 w-full bg-black border rounded mt-1">
-                        {data.map(({ place_id, description }) => (
-                            <li 
-                                key={place_id} 
-                                onClick={() => handleSelect(description)}
-                                className="p-2 hover:bg-gray-600 cursor-pointer"
-                            >
-                                {description}
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <div className="flex items-center gap-2"> {/* Usando flexbox para alinhar input e botão */}
+                    <div className="relative flex-grow"> {/* 'relative' e 'flex-grow' para o autocomplete ocupar o espaço */}
+                        <input
+                            type="text"
+                            placeholder="Digite o nome de uma cidade..."
+                            value={value}
+                            // --- MUDANÇA IMPORTANTE no onChange ---
+                            // Se o usuário digitar algo novo, limpamos a seleção anterior para evitar inconsistências
+                            onChange={(e) => {
+                                setValue(e.target.value);
+
+                                setSelectedPlace(null);
+                            }}
+                            disabled={!ready}
+                            className="p-2 border rounded w-full"
+                        />
+                        
+                        {status === "OK" && (
+                            <ul className="absolute z-10 w-full bg-black border rounded mt-1">
+                                {data.map(({ place_id, description }) => (
+                                    <li 
+                                        key={place_id} 
+                                        onClick={() => handleSelect(description)}
+                                        className="p-2 hover:bg-gray-600 cursor-pointer"
+                                    >
+                                        {description}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                    
+                    {/* --- NOVO BOTÃO DE ADICIONAR --- */}
+                    <button 
+                        onClick={handleAddClick}
+                        // O botão fica desabilitado até que um local válido seja selecionado
+                        disabled={!selectedPlace}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
+                    >
+                        Adicionar
+                    </button>
+                </div>
             </div>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">

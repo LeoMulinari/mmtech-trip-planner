@@ -3,3 +3,5 @@
 {"nome":"São Paulo","latitude":-23.555308870176624,"longitude":-46.63895683067133,"ordem":3,"createdAt":{"$$date":1749169436912},"_id":"o0bveUYlu1FkaBl0"}
 {"nome":"Ipiranga","latitude":-25.02471,"longitude":-50.58408,"ordem":4,"createdAt":{"$$date":1749169713135},"_id":"oRxlUbpmIYjJn4fI"}
 {"nome":"Palmeira, PR, Brasil","latitude":-25.4197196,"longitude":-50.000433,"ordem":5,"createdAt":{"$$date":1749270205129},"_id":"6Xz0khp5dUcx6eLs"}
+{"nome":"Parque Vila Velha - Vila Velha, Ponta Grossa - PR, Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":6,"createdAt":{"$$date":1749270629727},"_id":"Hfe5bazUQBdypOpR"}
+{"nome":"Apucarana, PR, Brasil","latitude":-23.5525322,"longitude":-51.4638893,"ordem":7,"createdAt":{"$$date":1749271104993},"_id":"IEOXMbt5PetynTU7"}
