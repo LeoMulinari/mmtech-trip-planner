@@ -1,8 +1,7 @@
-{"nomeCompleto":"Rio Branco do Sul, State of Paraná, Brazil","nomeSimples":"Rio Branco do Sul, PR - Brazil","latitude":-25.1913965,"longitude":-49.3133742,"ordem":7,"createdAt":{"$$date":1749317576186},"_id":"3bnxXyg2cT6k6bVf"}
-{"nomeCompleto":"Curitiba, PR, Brasil","nomeSimples":"Curitiba, PR - Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":2,"createdAt":{"$$date":1749273342117},"_id":"C4qKFp9rBMxkgXPn"}
-{"nomeCompleto":"Parque Tanguá - Rua Oswaldo Maciel - Taboão, Curitiba - PR, Brasil","nomeSimples":"Parque Tanguá, Curitiba, PR - Brasil","latitude":-25.3790661,"longitude":-49.2824233,"ordem":3,"createdAt":{"$$date":1749273353603},"_id":"VWSpypVazhYvxvym"}
-{"nomeCompleto":"Roma, Itália","nomeSimples":"Roma, Lácio - Itália","latitude":41.8967068,"longitude":12.4822025,"ordem":4,"createdAt":{"$$date":1749274134252},"_id":"ejauRWMI5mXImK8V"}
-{"nomeCompleto":"Espanha","nomeSimples":" - Espanha","latitude":40.46366700000001,"longitude":-3.74922,"ordem":6,"createdAt":{"$$date":1749274609272},"_id":"p9pr49B7VPv7mCKs"}
-{"nomeCompleto":"Parque Vila Velha - Vila Velha, Ponta Grossa - PR, Brasil","nomeSimples":"Parque Vila Velha, Ponta Grossa, PR - Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":1,"createdAt":{"$$date":1749273332114},"_id":"tfyD37sn9qwFn6OM"}
-{"nomeCompleto":"Paris, França","nomeSimples":"Paris, IDF - França","latitude":48.8575475,"longitude":2.3513765,"ordem":5,"createdAt":{"$$date":1749274177386},"_id":"yd2Bu6AW4qgnHQji"}
-{"nomeCompleto":"Rio Grande do Sul, Brasil","nomeSimples":"Rio Grande do Sul, RS - Brasil","latitude":-29.3646459,"longitude":-51.6657692,"ordem":8,"createdAt":{"$$date":1749318747014},"_id":"kQbTq5PRu64S85Hn"}
+{"nome":"Roma, Lácio, Itália","latitude":41.8967068,"longitude":12.4822025,"ordem":1,"createdAt":{"$$date":1749324050812},"_id":"JbOkZdSE1G9ybea1"}
+{"nome":"Paris, IDF, França","latitude":48.8575475,"longitude":2.3513765,"ordem":2,"createdAt":{"$$date":1749324055527},"_id":"efJP6xc9H4qqBGXb"}
+{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":3,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
+{"nome":"Residencial Jardim das Araucárias, Ponta Grossa, PR, Brasil","latitude":-25.088432,"longitude":-50.0977891,"ordem":4,"createdAt":{"$$date":1749324099067},"_id":"XpRrfNNK4RqpCSLX"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":5,"createdAt":{"$$date":1749324107022},"_id":"qwdwlsYR6KsWFDnd"}
+{"nome":"Parque Vila Velha, Ponta Grossa, PR, Brasil","latitude":-25.2462635,"longitude":-50.0212126,"ordem":6,"createdAt":{"$$date":1749324122427},"_id":"LL0lULvdmnnvraKn"}
+{"nome":"Condomínio Inova, Ponta Grossa, PR, Brasil","latitude":-25.1092614,"longitude":-50.12416710000001,"ordem":7,"createdAt":{"$$date":1749324141226},"_id":"B6z0s5fyoPAWsFPZ"}

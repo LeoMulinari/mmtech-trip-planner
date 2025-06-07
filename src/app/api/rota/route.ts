@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 
 interface Destino {
     _id?: string;         // Gerado pelo NeDB, opcional no nosso código
-    nomeCompleto: string;
-    nomeSimples: string;
+    nome: string;
     latitude: number;
     longitude: number;
     ordem: number;
@@ -54,15 +53,15 @@ export async function POST(request: Request) {
 
            // A verificação de status continua, mas sem os logs
             if (data.status !== 'OK' || !data.routes[0]?.legs[0]) {
-                console.warn(`Não foi possível encontrar rota entre ${origem.nomeSimples} e ${destino.nomeSimples}. Verifique as coordenadas.`);
+                console.warn(`Não foi possível encontrar rota entre ${origem.nome} e ${destino.nome}. Verifique as coordenadas.`);
                 continue; 
             }
 
             const leg = data.routes[0].legs[0];
             
             response.trechos.push({
-                origem: origem.nomeSimples,
-                destino: destino.nomeSimples,
+                origem: origem.nome,
+                destino: destino.nome, 
                 distancia: leg.distance.text, // "115 km"
                 duracao: leg.duration.text,   // "1 hora 45 minutos"
             });

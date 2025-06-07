@@ -6,8 +6,7 @@ import db from '@/lib/database';
 
 interface Destino {
     _id?: string;         // Gerado pelo NeDB, opcional no nosso código
-    nomeCompleto: string; // Ex: "Parque Vila Velha, Ponta Grossa - PR, Brasil"
-    nomeSimples: string;  // Ex: "Parque Vila Velha"
+    nome: string; 
     latitude: number;
     longitude: number;
     ordem: number;
