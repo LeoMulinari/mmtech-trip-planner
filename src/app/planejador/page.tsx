@@ -256,78 +256,96 @@ export default function PlanejadorPage() {
     };
 
     return (
-        <li ref={setNodeRef} style={style}>
-            <div className="flex items-center gap-2 p-2 rounded bg-gray-700 w-full">
-                {/* A "alça" de arrastar. SOMENTE ela tem os listeners. */}
-                <div className="cursor-grab" {...attributes} {...listeners}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                </div>
-                <span className="flex-1 text-lg min-w-0 truncate" title={destino.nome}>
-                    {destino.ordem}. {destino.nome}
-                </span>
-                <button onClick={() => onDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
-                    Excluir
-                </button>
+    <li ref={setNodeRef} style={style}>
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-700 w-full group">
+            {/* Alça de arrastar com hover effect */}
+            <div className="cursor-grab touch-none text-slate-500 group-hover:text-white transition-colors" {...attributes} {...listeners}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
             </div>
-        </li>
-    );
+
+            <span className="flex-1 text-lg min-w-0 truncate text-slate-300 group-hover:text-white transition-colors" title={destino.nome}>
+                <span className="font-bold text-white">{destino.ordem}.</span> {destino.nome}
+            </span>
+
+            {/* Botão de excluir com hover effect */}
+            <button onClick={() => onDelete(destino._id!)} className="flex-shrink-0 p-1 rounded-full bg-slate-600 text-slate-400 hover:bg-red-500 hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </li>
+);
 }
 
     return (
-    <main className="container mx-auto p-4 md:p-8 flex flex-col h-screen max-h-screen">
+    <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        {/* --- CABEÇALHO --- */}
+        <div className="text-center mb-8">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                Planejador de <span className="text-sky-400">Viagem</span>
+            </h1>
+        </div>
 
-        {/* --- CABEÇALHO E FORMULÁRIO --- */}
-        <div className="flex-shrink-0">
-            <h1 className="text-4xl font-bold mb-6 text-center md:text-left">Planejador de Viagem</h1>
-            <div className="p-4 border rounded-lg mb-4">
-                <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
-                <div className="flex items-center gap-2">
-                    <div className="relative flex-grow">
-                        <input type="text" placeholder="Digite o nome de uma cidade, local ou endereço..." value={value} onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }} disabled={!ready} className="p-2 border rounded w-full" />
-                        {status === "OK" && (
-                            <ul className="absolute z-10 w-full bg-black border rounded mt-1 max-h-60 overflow-y-auto">
-                                {data.map((suggestion) => (
-                                    <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-2 hover:bg-gray-600 cursor-pointer">{suggestion.description}</li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                    <button onClick={handleAddClick} disabled={!selectedPlace} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">Adicionar</button>
+        {/* --- CARD DE ADIÇÃO DE DESTINO --- */}
+        <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
+            <h3 className="text-xl font-semibold mb-4 text-white">Adicionar Novo Destino</h3>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+                <div className="relative flex-grow w-full">
+                    <input
+                        type="text"
+                        placeholder="Digite um local, cidade ou endereço..."
+                        value={value}
+                        onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
+                        disabled={!ready}
+                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                    />
+                    {status === "OK" && (
+                        <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
+                            {data.map((suggestion) => (
+                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer transition-colors">{suggestion.description}</li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
+                <button onClick={handleAddClick} disabled={!selectedPlace} className="w-full sm:w-auto px-6 py-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors flex-shrink-0">
+                    Adicionar
+                </button>
             </div>
         </div>
 
-        {/* --- SEÇÃO DE TOTAIS --- */}
+        {/* --- CARD DE RESUMO DA VIAGEM --- */}
         {rota && rota.distanciaTotal > 0 && (
-            <div className="flex-shrink-0 mt-2 mb-8 p-4 bg-gray-700 rounded-lg max-w-xl mx-auto">
-                <h3 className="text-xl font-bold mb-2 text-center">Resumo da Viagem (Trechos Terrestres)</h3>
-                <div className="flex justify-center items-center gap-8">
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">Distância Calculada</p>
-                        <p className="text-2xl font-semibold">{formatarDistancia(rota.distanciaTotal)}</p>
+            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
+                <div className="flex flex-col sm:flex-row justify-around items-center text-center">
+                    <div className="w-full sm:w-auto">
+                        <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Distância Terrestre</p>
+                        <p className="text-3xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
                     </div>
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">Duração Estimada</p>
-                        <p className="text-2xl font-semibold">{formatarDuracao(rota.duracaoTotal)}</p>
+                    <div className="w-full sm:w-auto border-t border-slate-700 sm:border-t-0 sm:border-l sm:h-16 my-4 sm:my-0 mx-8"></div>
+                    <div className="w-full sm:w-auto">
+                        <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Duração Estimada</p>
+                        <p className="text-3xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
                     </div>
                 </div>
             </div>
         )}
 
-        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS --- */}
-        <div className="flex-grow flex flex-col md:flex-row gap-8 min-h-0">
+        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS DEFINITIVAS --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {/* Coluna 1: Seu Roteiro */}
-            <div className="md:w-1/3 flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 flex-shrink-0">Seu Roteiro:</h2>
-                <div className="overflow-y-auto pr-2">
+            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Seu Roteiro</h2>
+                <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
-                            <ul className="space-y-2">
+                            <ul className="space-y-3">
                                 {destinos.map((destino) => (
-                                     <SortableListItem key={destino._id} destino={destino} onDelete={handleDelete} />
+                                    <SortableListItem key={destino._id} destino={destino} onDelete={handleDelete} />
                                 ))}
                             </ul>
                         </SortableContext>
@@ -336,22 +354,25 @@ export default function PlanejadorPage() {
             </div>
 
             {/* Coluna 2: Detalhes da Rota */}
-            <div className="md:w-1/3 flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 flex-shrink-0">Detalhes da Rota:</h2>
-                <div className="overflow-y-auto pr-2">
-                    {isLoadingRota && <p>Calculando rota...</p>}
-                    {!isLoadingRota && destinos.length < 2 && (<p className="text-gray-500">Adicione mais um destino para calcular a rota.</p>)}
+            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
+                <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
+                    {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
+                    {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
                     {rota && rota.trechos.length > 0 && !isLoadingRota && (
                         <div className="space-y-4">
                             {rota.trechos.map((trecho, index) => (
-                                <div key={index} className="p-2 border-b border-gray-700">
-                                    <p><strong>De:</strong> {trecho.origem}</p>
-                                    <p><strong>Para:</strong> {trecho.destino}</p>
+                                <div key={index} className="p-3 border-b border-slate-700">
+                                    <p className="font-semibold text-white">{trecho.origem}</p>
+                                    <p className="pl-4 text-sm text-slate-400">↓</p>
+                                    <p className="font-semibold text-white">{trecho.destino}</p>
+                                    <div className="mt-2 text-sm">
                                     {trecho.tipo === 'CARRO' ? (
-                                        <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
+                                        <p>Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
                                     ) : (
-                                        <p className="text-blue-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
+                                        <p className="text-sky-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
                                     )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -360,24 +381,28 @@ export default function PlanejadorPage() {
             </div>
 
             {/* Coluna 3: Mapa */}
-            <div className="md:w-1/3 rounded-lg overflow-hidden min-h-[400px] md:min-h-full">
-                <GoogleMap
-                    mapContainerStyle={{ width: '100%', height: '100%' }}
-                    center={mapCenter}
-                    zoom={mapZoom}
-                    options={{ styles: [/* Seus estilos de mapa escuro */], disableDefaultUI: true, zoomControl: true }}
-                >
-                    {destinos.map((destino) => (
-                        <MarkerF
-                            key={destino._id}
-                            position={{ lat: destino.latitude, lng: destino.longitude }}
-                            label={{ text: destino.ordem.toString(), color: "white" }}
-                            title={destino.nome}
-                        />
-                    ))}
-                </GoogleMap>
+            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Mapa do Roteiro</h2>
+                <div className="rounded-lg overflow-hidden flex-grow min-h-[400px]">
+                    <GoogleMap
+                        mapContainerStyle={{ width: '100%', height: '100%' }}
+                        center={mapCenter}
+                        zoom={mapZoom}
+                        options={{ styles: [/* Seus estilos de mapa escuro */], disableDefaultUI: true, zoomControl: true }}
+                    >
+                        {destinos.map((destino) => (
+                            <MarkerF
+                                key={destino._id}
+                                position={{ lat: destino.latitude, lng: destino.longitude }}
+                                label={{ text: destino.ordem.toString(), color: "white", fontWeight: "bold" }}
+                                title={destino.nome}
+                            />
+                        ))}
+                    </GoogleMap>
+                </div>
             </div>
         </div>
     </main>
+
 );
 }

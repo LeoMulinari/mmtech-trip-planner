@@ -37,7 +37,7 @@ export default function RootLayout({
   if (!isLoaded) {
     return (
       <html lang="pt-br">
-        <body className={inter.className}>
+         <body className={`${inter.className} bg-slate-900 text-slate-300`}>
           <p>Carregando...</p>
         </body>
       </html>
@@ -47,7 +47,7 @@ export default function RootLayout({
   // Quando tudo está carregado, renderiza a estrutura com os filhos (sua página)
   return (
     <html lang="pt-br">
-      <body className={inter.className}>{children}</body>
+       <body className={`${inter.className} bg-slate-600 text-slate-300`}>{children}</body>
     </html>
   );
 }
