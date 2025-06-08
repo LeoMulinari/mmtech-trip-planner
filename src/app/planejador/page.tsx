@@ -278,7 +278,7 @@ export default function PlanejadorPage() {
             </div>
         </div>
 
-        {/* --- SEÇÃO DE TOTAIS COM LAYOUT COMPACTO E CENTRALIZADO --- */}
+        {/* --- SEÇÃO DE TOTAIS --- */}
         {rota && rota.distanciaTotal > 0 && (
             <div className="flex-shrink-0 mt-2 mb-8 p-4 bg-gray-700 rounded-lg max-w-xl mx-auto">
                 <h3 className="text-xl font-bold mb-2 text-center">Resumo da Viagem (Trechos Terrestres)</h3>
@@ -295,7 +295,7 @@ export default function PlanejadorPage() {
             </div>
         )}
 
-        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS E SCROLL INDIVIDUAL --- */}
+        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS --- */}
         <div className="flex-grow flex flex-col md:flex-row gap-8 min-h-0">
 
             {/* Coluna 1: Seu Roteiro */}
@@ -306,21 +306,23 @@ export default function PlanejadorPage() {
                         <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
                             <ul className="space-y-2">
                                 {destinos.map((destino) => (
-                                    <li key={destino._id}>
-                                        <SortableItem id={destino._id!}>
-                                            {/* O conteúdo do item da lista é um flex container */}
-                                            <div className="flex items-center w-full gap-2 text-lg">
-                                                {/* O span do nome pode encolher e será cortado */}
-                                                <span className="flex-1 min-w-0 truncate" title={destino.nome}>
-                                                    {destino.ordem}. {destino.nome}
-                                                </span>
-                                                {/* O botão não encolhe */}
-                                                <button onClick={() => handleDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
-                                                    Excluir
-                                                </button>
-                                            </div>
-                                        </SortableItem>
-                                    </li>
+                                    <SortableItem key={destino._id} id={destino._id!}>
+                                        {/* --- ESTRUTURA DO ITEM DA LISTA: CORREÇÃO DEFINITIVA --- */}
+                                        <div className="flex items-center gap-3 p-2 rounded bg-gray-700 w-full">
+                                            {/* Ícone para arrastar */}
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 cursor-grab flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                            {/* O span do nome agora tem as classes corretas para truncar */}
+                                            <span className="flex-1 text-lg min-w-0 truncate" title={destino.nome}>
+                                                {destino.ordem}. {destino.nome}
+                                            </span>
+                                            {/* O botão não vai encolher */}
+                                            <button onClick={() => handleDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </SortableItem>
                                 ))}
                             </ul>
                         </SortableContext>
@@ -333,7 +335,7 @@ export default function PlanejadorPage() {
                 <h2 className="text-2xl font-semibold mb-4 flex-shrink-0">Detalhes da Rota:</h2>
                 <div className="overflow-y-auto pr-2">
                     {isLoadingRota && <p>Calculando rota...</p>}
-                    {!isLoadingRota && destinos.length < 2 && (<p className="text-gray-500">Adicione mais um destino...</p>)}
+                    {!isLoadingRota && destinos.length < 2 && (<p className="text-gray-500">Adicione mais um destino para calcular a rota.</p>)}
                     {rota && rota.trechos.length > 0 && !isLoadingRota && (
                         <div className="space-y-4">
                             {rota.trechos.map((trecho, index) => (
