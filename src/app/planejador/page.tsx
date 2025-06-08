@@ -322,7 +322,10 @@ export default function PlanejadorPage() {
 
             {/* Coluna 1: Seu Roteiro */}
             <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Seu Roteiro</h2>
+                <div className="flex justify-between items-baseline mb-4 flex-shrink-0">
+                    <h2 className="text-2xl font-semibold text-white">Seu Roteiro</h2>
+                    <p className="text-xs text-slate-400 italic">Arraste para reordenar</p>
+                </div>
                 <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
