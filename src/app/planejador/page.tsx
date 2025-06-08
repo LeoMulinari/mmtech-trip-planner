@@ -301,7 +301,7 @@ export default function PlanejadorPage() {
                         value={value}
                         onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
                         disabled={!ready}
-                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-400"
                     />
                     {status === "OK" && (
                         <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
@@ -368,7 +368,7 @@ export default function PlanejadorPage() {
                                     <p className="font-semibold text-white">{trecho.destino}</p>
                                     <div className="mt-2 text-sm">
                                     {trecho.tipo === 'CARRO' ? (
-                                        <p>Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
+                                        <p className="text-slate-300">Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
                                     ) : (
                                         <p className="text-sky-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
                                     )}
