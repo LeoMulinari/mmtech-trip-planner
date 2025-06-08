@@ -316,23 +316,8 @@ export default function PlanejadorPage() {
                 </button>
             </div>
         </div>
-
-        {/* --- CARD DE RESUMO DA VIAGEM --- */}
-        {rota && rota.distanciaTotal > 0 && (
-            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
-                <div className="flex flex-col sm:flex-row justify-around items-center text-center">
-                    <div className="w-full sm:w-auto">
-                        <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Distância Terrestre</p>
-                        <p className="text-3xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
-                    </div>
-                    <div className="w-full sm:w-auto border-t border-slate-700 sm:border-t-0 sm:border-l sm:h-16 my-4 sm:my-0 mx-8"></div>
-                    <div className="w-full sm:w-auto">
-                        <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Duração Estimada</p>
-                        <p className="text-3xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
-                    </div>
-                </div>
-            </div>
-        )}
+        
+        {/* O CARD DE RESUMO FOI REMOVIDO DESTA POSIÇÃO */}
 
         {/* --- ÁREA PRINCIPAL COM 3 COLUNAS DEFINITIVAS --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -353,30 +338,50 @@ export default function PlanejadorPage() {
                 </div>
             </div>
 
-            {/* Coluna 2: Detalhes da Rota */}
-            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
-                <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
-                    {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
-                    {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
-                    {rota && rota.trechos.length > 0 && !isLoadingRota && (
-                        <div className="space-y-4">
-                            {rota.trechos.map((trecho, index) => (
-                                <div key={index} className="p-3 border-b border-slate-700">
-                                    <p className="font-semibold text-white">{trecho.origem}</p>
-                                    <p className="pl-4 text-sm text-slate-400">↓</p>
-                                    <p className="font-semibold text-white">{trecho.destino}</p>
-                                    <div className="mt-2 text-sm">
-                                    {trecho.tipo === 'CARRO' ? (
-                                        <p className="text-slate-300">Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
-                                    ) : (
-                                        <p className="text-sky-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
-                                    )}
-                                    </div>
-                                </div>
-                            ))}
+            {/* Coluna 2: Resumo e Detalhes da Rota */}
+            <div className="flex flex-col gap-8">
+                {/* O CARD DE RESUMO DA VIAGEM AGORA ESTÁ AQUI NO TOPO DA SEGUNDA COLUNA */}
+                {rota && rota.distanciaTotal > 0 && (
+                    <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
+                        <div className="flex flex-col sm:flex-row justify-around items-center text-center">
+                            <div className="w-full sm:w-auto">
+                                <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Distância Terrestre</p>
+                                <p className="text-3xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
+                            </div>
+                            <div className="w-full sm:w-auto border-t border-slate-700 sm:border-t-0 sm:border-l sm:h-16 my-4 sm:my-0 mx-8"></div>
+                            <div className="w-full sm:w-auto">
+                                <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Duração Estimada</p>
+                                <p className="text-3xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
+                            </div>
                         </div>
-                    )}
+                    </div>
+                )}
+                
+                {/* Card de Detalhes da Rota */}
+                <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col flex-grow">
+                    <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
+                    <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
+                        {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
+                        {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
+                        {rota && rota.trechos.length > 0 && !isLoadingRota && (
+                            <div className="space-y-4">
+                                {rota.trechos.map((trecho, index) => (
+                                    <div key={index} className="p-3 border-b border-slate-700">
+                                        <p className="font-semibold text-white">{trecho.origem}</p>
+                                        <p className="pl-4 text-sm text-slate-400">↓</p>
+                                        <p className="font-semibold text-white">{trecho.destino}</p>
+                                        <div className="mt-2 text-sm">
+                                        {trecho.tipo === 'CARRO' ? (
+                                            <p className="text-slate-300">Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
+                                        ) : (
+                                            <p className="text-sky-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
+                                        )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -403,6 +408,5 @@ export default function PlanejadorPage() {
             </div>
         </div>
     </main>
-
 );
 }
