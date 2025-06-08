@@ -9,22 +9,9 @@ import usePlacesAutocomplete, {
 
 
 // --- NOVAS IMPORTAÇÕES DO DND-KIT ---
-import { SortableItem } from '@/components/SortableItem';
-import {
-    closestCenter,
-    DndContext,
-    DragEndEvent,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { GoogleMap, MarkerF } from '@react-google-maps/api';
 
 // --- INTERFACES ---
@@ -254,6 +241,40 @@ export default function PlanejadorPage() {
         return `${horas}h ${minutos}min`;
     };
 
+    function SortableListItem({ destino, onDelete }: { destino: Destino, onDelete: (id: string) => void }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: destino._id! });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <li ref={setNodeRef} style={style}>
+            <div className="flex items-center gap-2 p-2 rounded bg-gray-700 w-full">
+                {/* A "alça" de arrastar. SOMENTE ela tem os listeners. */}
+                <div className="cursor-grab" {...attributes} {...listeners}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                </div>
+                <span className="flex-1 text-lg min-w-0 truncate" title={destino.nome}>
+                    {destino.ordem}. {destino.nome}
+                </span>
+                <button onClick={() => onDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
+                    Excluir
+                </button>
+            </div>
+        </li>
+    );
+}
+
     return (
     <main className="container mx-auto p-4 md:p-8 flex flex-col h-screen max-h-screen">
 
@@ -306,23 +327,7 @@ export default function PlanejadorPage() {
                         <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
                             <ul className="space-y-2">
                                 {destinos.map((destino) => (
-                                    <SortableItem key={destino._id} id={destino._id!}>
-                                        {/* --- ESTRUTURA DO ITEM DA LISTA: CORREÇÃO DEFINITIVA --- */}
-                                        <div className="flex items-center gap-3 p-2 rounded bg-gray-700 w-full">
-                                            {/* Ícone para arrastar */}
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 cursor-grab flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                                            </svg>
-                                            {/* O span do nome agora tem as classes corretas para truncar */}
-                                            <span className="flex-1 text-lg min-w-0 truncate" title={destino.nome}>
-                                                {destino.ordem}. {destino.nome}
-                                            </span>
-                                            {/* O botão não vai encolher */}
-                                            <button onClick={() => handleDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
-                                                Excluir
-                                            </button>
-                                        </div>
-                                    </SortableItem>
+                                     <SortableListItem key={destino._id} destino={destino} onDelete={handleDelete} />
                                 ))}
                             </ul>
                         </SortableContext>

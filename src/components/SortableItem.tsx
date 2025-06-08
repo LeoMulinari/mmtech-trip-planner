@@ -1,26 +1,12 @@
+// Em: src/components/SortableItem.tsx
 'use client';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 
-
-export function SortableItem({ id, children }: { id: string, children: React.ReactNode }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id });
-  
-  // Estilos que aplicam a animação de arrastar
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-  
+// Este componente agora é apenas um li simples.
+// Toda a lógica de "sortable" será movida para a página principal.
+export function SortableItem({ children }: { children: React.ReactNode }) {
   return (
-    <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <li>
       {children}
     </li>
   );

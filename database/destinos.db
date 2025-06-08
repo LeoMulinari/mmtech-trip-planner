@@ -6,35 +6,11 @@
 {"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":1,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
 {"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":3,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
 {"nome":"São Paulo, SP, Brasil","latitude":-23.5557714,"longitude":-46.6395571,"ordem":6,"createdAt":{"$$date":1749355878043},"_id":"rBpFHfX7x7fYxtFo"}
-{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":1,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
-{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":1,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
-{"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":2,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
-{"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":2,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
-{"nome":"Nova York, Nova Iorque, NY, Estados Unidos","latitude":40.7127753,"longitude":-74.0059728,"ordem":3,"createdAt":{"$$date":1749326667406},"_id":"Ce5SS9MIHbEfyPZl"}
-{"nome":"Nova York, Nova Iorque, NY, Estados Unidos","latitude":40.7127753,"longitude":-74.0059728,"ordem":3,"createdAt":{"$$date":1749326667406},"_id":"Ce5SS9MIHbEfyPZl"}
-{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":4,"createdAt":{"$$date":1749326540741},"_id":"XqbmbE9a218Qni7B"}
-{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":4,"createdAt":{"$$date":1749326540741},"_id":"XqbmbE9a218Qni7B"}
-{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":5,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
-{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":5,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
-{"nome":"São Paulo, SP, Brasil","latitude":-23.5557714,"longitude":-46.6395571,"ordem":6,"createdAt":{"$$date":1749355878043},"_id":"rBpFHfX7x7fYxtFo"}
-{"nome":"São Paulo, SP, Brasil","latitude":-23.5557714,"longitude":-46.6395571,"ordem":6,"createdAt":{"$$date":1749355878043},"_id":"rBpFHfX7x7fYxtFo"}
-{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":7,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
-{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":7,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
-{"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":8,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
-{"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":8,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
-{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":1,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
-{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":2,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
-{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":1,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
+{"$$deleted":true,"_id":"rBpFHfX7x7fYxtFo"}
+{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":1,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
+{"nome":"Itália","latitude":41.87194,"longitude":12.56738,"ordem":2,"createdAt":{"$$date":1749326710930},"_id":"AMJEH136z3OWYGoD"}
 {"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":3,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
-{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":2,"createdAt":{"$$date":1749324060201},"_id":"e1WQqhUHa4ek3DgV"}
 {"nome":"Nova York, Nova Iorque, NY, Estados Unidos","latitude":40.7127753,"longitude":-74.0059728,"ordem":4,"createdAt":{"$$date":1749326667406},"_id":"Ce5SS9MIHbEfyPZl"}
-{"nome":"México","latitude":23.634501,"longitude":-102.552784,"ordem":3,"createdAt":{"$$date":1749326675282},"_id":"osMNo4ECsp4DT3Z3"}
 {"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":5,"createdAt":{"$$date":1749326540741},"_id":"XqbmbE9a218Qni7B"}
-{"nome":"Nova York, Nova Iorque, NY, Estados Unidos","latitude":40.7127753,"longitude":-74.0059728,"ordem":4,"createdAt":{"$$date":1749326667406},"_id":"Ce5SS9MIHbEfyPZl"}
-{"nome":"São Paulo, SP, Brasil","latitude":-23.5557714,"longitude":-46.6395571,"ordem":6,"createdAt":{"$$date":1749355878043},"_id":"rBpFHfX7x7fYxtFo"}
-{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":5,"createdAt":{"$$date":1749326540741},"_id":"XqbmbE9a218Qni7B"}
-{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":7,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
-{"nome":"São Paulo, SP, Brasil","latitude":-23.5557714,"longitude":-46.6395571,"ordem":6,"createdAt":{"$$date":1749355878043},"_id":"rBpFHfX7x7fYxtFo"}
-{"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":8,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
-{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":7,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
-{"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":8,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
+{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":6,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
+{"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":7,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
