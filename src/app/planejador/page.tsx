@@ -7,7 +7,6 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from 'use-places-autocomplete';
 
-import { GoogleMap, MarkerF } from '@react-google-maps/api';
 
 // --- NOVAS IMPORTAÇÕES DO DND-KIT ---
 import { SortableItem } from '@/components/SortableItem';
@@ -26,6 +25,7 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { GoogleMap, MarkerF } from '@react-google-maps/api';
 
 // --- INTERFACES ---
 interface Destino {
@@ -255,90 +255,110 @@ export default function PlanejadorPage() {
     };
 
     return (
-    <main className="container mx-auto p-4 md:p-8">
-        <h1 className="text-4xl font-bold mb-6 text-center md:text-left">Planejador de Viagem</h1>
-        
-        {/* Formulário de Adição (sem alterações) */}
-        <div className="p-4 border rounded-lg mb-8">
-            <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
-            <div className="flex items-center gap-2">
-                <div className="relative flex-grow">
-                    <input type="text" placeholder="Digite o nome de uma cidade, local ou endereço..." value={value} onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }} disabled={!ready} className="p-2 border rounded w-full" />
-                    {status === "OK" && (
-                        <ul className="absolute z-10 w-full bg-black border rounded mt-1">
-                            {data.map((suggestion) => (
-                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-2 hover:bg-gray-600 cursor-pointer">{suggestion.description}</li>
-                            ))}
-                        </ul>
-                    )}
+    <main className="container mx-auto p-4 md:p-8 flex flex-col h-screen max-h-screen">
+
+        {/* --- CABEÇALHO E FORMULÁRIO --- */}
+        <div className="flex-shrink-0">
+            <h1 className="text-4xl font-bold mb-6 text-center md:text-left">Planejador de Viagem</h1>
+            <div className="p-4 border rounded-lg mb-4">
+                <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
+                <div className="flex items-center gap-2">
+                    <div className="relative flex-grow">
+                        <input type="text" placeholder="Digite o nome de uma cidade, local ou endereço..." value={value} onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }} disabled={!ready} className="p-2 border rounded w-full" />
+                        {status === "OK" && (
+                            <ul className="absolute z-10 w-full bg-black border rounded mt-1 max-h-60 overflow-y-auto">
+                                {data.map((suggestion) => (
+                                    <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-2 hover:bg-gray-600 cursor-pointer">{suggestion.description}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                    <button onClick={handleAddClick} disabled={!selectedPlace} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">Adicionar</button>
                 </div>
-                <button onClick={handleAddClick} disabled={!selectedPlace} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">Adicionar</button>
             </div>
         </div>
 
-        {/* --- ÁREA PRINCIPAL COM NOVO GRID DE 3 COLUNAS --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* --- SEÇÃO DE TOTAIS COM LAYOUT COMPACTO E CENTRALIZADO --- */}
+        {rota && rota.distanciaTotal > 0 && (
+            <div className="flex-shrink-0 mt-2 mb-8 p-4 bg-gray-700 rounded-lg max-w-xl mx-auto">
+                <h3 className="text-xl font-bold mb-2 text-center">Resumo da Viagem (Trechos Terrestres)</h3>
+                <div className="flex justify-center items-center gap-8">
+                    <div className="text-center">
+                        <p className="text-sm text-gray-400">Distância Calculada</p>
+                        <p className="text-2xl font-semibold">{formatarDistancia(rota.distanciaTotal)}</p>
+                    </div>
+                    <div className="text-center">
+                        <p className="text-sm text-gray-400">Duração Estimada</p>
+                        <p className="text-2xl font-semibold">{formatarDuracao(rota.duracaoTotal)}</p>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS E SCROLL INDIVIDUAL --- */}
+        <div className="flex-grow flex flex-col md:flex-row gap-8 min-h-0">
 
             {/* Coluna 1: Seu Roteiro */}
-            <div className="md:col-span-1">
-                <h2 className="text-2xl font-semibold mb-4">Seu Roteiro:</h2>
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
-                        <ul className="space-y-2">
-                            {destinos.map((destino) => (
-                                <SortableItem key={destino._id} id={destino._id!}>
-                                    {/* O conteúdo visual do item agora fica aqui dentro */}
-                                    <div className="text-lg flex items-center justify-between w-full" title={destino.nome}>
-                                        <span className="flex-grow truncate pr-2">{destino.ordem}. {destino.nome}</span>
-                                        <button onClick={() => handleDelete(destino._id!)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex-shrink-0">Excluir</button>
-                                    </div>
-                                </SortableItem>
-                            ))}
-                        </ul>
-                    </SortableContext>
-                </DndContext>
+            <div className="md:w-1/3 flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 flex-shrink-0">Seu Roteiro:</h2>
+                <div className="overflow-y-auto pr-2">
+                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
+                            <ul className="space-y-2">
+                                {destinos.map((destino) => (
+                                    <li key={destino._id}>
+                                        <SortableItem id={destino._id!}>
+                                            {/* O conteúdo do item da lista é um flex container */}
+                                            <div className="flex items-center w-full gap-2 text-lg">
+                                                {/* O span do nome pode encolher e será cortado */}
+                                                <span className="flex-1 min-w-0 truncate" title={destino.nome}>
+                                                    {destino.ordem}. {destino.nome}
+                                                </span>
+                                                {/* O botão não encolhe */}
+                                                <button onClick={() => handleDelete(destino._id!)} className="flex-shrink-0 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </SortableItem>
+                                    </li>
+                                ))}
+                            </ul>
+                        </SortableContext>
+                    </DndContext>
+                </div>
             </div>
 
             {/* Coluna 2: Detalhes da Rota */}
-            <div className="md:col-span-1">
-                <h2 className="text-2xl font-semibold mb-4">Detalhes da Rota:</h2>
-                {isLoadingRota && <p className="mt-4">Calculando rota...</p>}
-                {rota && rota.trechos.length > 0 && !isLoadingRota && (
-                    <div className="space-y-4">
-                        {rota.trechos.map((trecho, index) => (
-                            <div key={index} className="p-2 border-b">
-                                <p><strong>De:</strong> {trecho.origem.split(',')[0]}</p>
-                                <p><strong>Para:</strong> {trecho.destino.split(',')[0]}</p>
-                                {trecho.tipo === 'CARRO' ? (
-                                    <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
-                                ) : (
-                                    <p className="text-blue-500 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
-                                )}
-                            </div>
-                        ))}
-                        {rota && rota.distanciaTotal > 0 && (
-                            <div className="mt-4 p-4 bg-gray-600 rounded-lg">
-                                <p className="text-lg font-bold">Resumo da Viagem (Apenas Trechos Terrestres):</p>
-                                <p className="mt-2">Distância Total Calculada: {formatarDistancia(rota.distanciaTotal)}</p>
-                                <p>Duração Total Calculada: {formatarDuracao(rota.duracaoTotal)}</p>
-                            </div>
-                        )}
-                    </div>      
-                )}
-                {destinos.length < 2 && !isLoadingRota && (<p className="mt-4 text-gray-500">Adicione pelo menos mais um destino para calcular a rota.</p>)}
+            <div className="md:w-1/3 flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 flex-shrink-0">Detalhes da Rota:</h2>
+                <div className="overflow-y-auto pr-2">
+                    {isLoadingRota && <p>Calculando rota...</p>}
+                    {!isLoadingRota && destinos.length < 2 && (<p className="text-gray-500">Adicione mais um destino...</p>)}
+                    {rota && rota.trechos.length > 0 && !isLoadingRota && (
+                        <div className="space-y-4">
+                            {rota.trechos.map((trecho, index) => (
+                                <div key={index} className="p-2 border-b border-gray-700">
+                                    <p><strong>De:</strong> {trecho.origem}</p>
+                                    <p><strong>Para:</strong> {trecho.destino}</p>
+                                    {trecho.tipo === 'CARRO' ? (
+                                        <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
+                                    ) : (
+                                        <p className="text-blue-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Coluna 3: Mapa */}
-            <div className="md:col-span-1 rounded-lg overflow-hidden h-96 md:h-auto min-h-[500px]">
+            <div className="md:w-1/3 rounded-lg overflow-hidden min-h-[400px] md:min-h-full">
                 <GoogleMap
                     mapContainerStyle={{ width: '100%', height: '100%' }}
                     center={mapCenter}
-                    zoom={mapZoom} // Usando o estado de zoom
-                    options={{
-                        styles: [ /* Seus estilos de mapa escuro */ ],
-                        disableDefaultUI: true,
-                        zoomControl: true,
-                    }}
+                    zoom={mapZoom}
+                    options={{ styles: [/* Seus estilos de mapa escuro */], disableDefaultUI: true, zoomControl: true }}
                 >
                     {destinos.map((destino) => (
                         <MarkerF
@@ -352,5 +372,5 @@ export default function PlanejadorPage() {
             </div>
         </div>
     </main>
-    );
+);
 }
