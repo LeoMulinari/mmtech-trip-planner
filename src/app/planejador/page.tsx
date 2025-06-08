@@ -301,12 +301,12 @@ export default function PlanejadorPage() {
                         value={value}
                         onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
                         disabled={!ready}
-                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-400"
+                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-400 text-slate-50"
                     />
                     {status === "OK" && (
                         <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
                             {data.map((suggestion) => (
-                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer transition-colors">{suggestion.description}</li>
+                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer transition-colors text-slate-50">{suggestion.description}</li>
                             ))}
                         </ul>
                     )}
@@ -316,8 +316,6 @@ export default function PlanejadorPage() {
                 </button>
             </div>
         </div>
-        
-        {/* O CARD DE RESUMO FOI REMOVIDO DESTA POSIÇÃO */}
 
         {/* --- ÁREA PRINCIPAL COM 3 COLUNAS DEFINITIVAS --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -357,32 +355,35 @@ export default function PlanejadorPage() {
                     </div>
                 )}
                 
-                {/* Card de Detalhes da Rota */}
-                <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col flex-grow">
-                    <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
-                    <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
-                        {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
-                        {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
-                        {rota && rota.trechos.length > 0 && !isLoadingRota && (
-                            <div className="space-y-4">
-                                {rota.trechos.map((trecho, index) => (
-                                    <div key={index} className="p-3 border-b border-slate-700">
-                                        <p className="font-semibold text-white">{trecho.origem}</p>
-                                        <p className="pl-4 text-sm text-slate-400">↓</p>
-                                        <p className="font-semibold text-white">{trecho.destino}</p>
-                                        <div className="mt-2 text-sm">
-                                        {trecho.tipo === 'CARRO' ? (
-                                            <p className="text-slate-300">Distância: {trecho.distancia} <span className="text-slate-500">|</span> Duração: {trecho.duracao}</p>
-                                        ) : (
-                                            <p className="text-sky-400 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
-                                        )}
-                                        </div>
+                {/* Coluna 2: Detalhes da Rota (COM A MUDANÇA) */}
+            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
+                <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
+                    {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
+                    {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
+                    {rota && rota.trechos.length > 0 && !isLoadingRota && (
+                        <div className="space-y-3">
+                            {rota.trechos.map((trecho, index) => (
+                                // --- ESTE É O BLOCO QUE MUDOU ---
+                                <div key={index} className="p-2 border-b border-slate-700 text-sm">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="font-semibold text-white truncate" title={trecho.origem}>{trecho.origem.split(',')[0]}</span>
+                                        <span className="text-sky-400">→</span>
+                                        <span className="font-semibold text-white truncate" title={trecho.destino}>{trecho.destino.split(',')[0]}</span>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                    <div className="mt-1 text-slate-400">
+                                        {trecho.tipo === 'CARRO' ? (
+                                            <span>{trecho.distancia} <span className="text-slate-600 mx-1">|</span> {trecho.duracao}</span>
+                                        ) : (
+                                            <span className="text-sky-400 font-semibold">✈️ Rota intercontinental ou longa</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
+            </div>
             </div>
 
             {/* Coluna 3: Mapa */}

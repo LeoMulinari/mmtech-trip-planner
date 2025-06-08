@@ -28,3 +28,4 @@
 {"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":7,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
 {"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":6,"createdAt":{"$$date":1749355893992},"_id":"PI4hFfXiQh8ZTrdK"}
 {"nome":"Tokyo, Tóquio, Japão","latitude":35.6764225,"longitude":139.650027,"ordem":7,"createdAt":{"$$date":1749355904390},"_id":"BhwaHJFztSSuBbJa"}
+{"nome":"Osaka, Japão","latitude":34.6937249,"longitude":135.5022535,"ordem":8,"createdAt":{"$$date":1749422521633},"_id":"wn2z7gNYIpGJkjnI"}
