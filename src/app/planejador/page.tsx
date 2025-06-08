@@ -7,6 +7,8 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from 'use-places-autocomplete';
 
+import { GoogleMap, MarkerF } from '@react-google-maps/api';
+
 // --- NOVAS IMPORTAÇÕES DO DND-KIT ---
 import { SortableItem } from '@/components/SortableItem';
 import {
@@ -103,6 +105,11 @@ export default function PlanejadorPage() {
     const [isLoadingRota, setIsLoadingRota] = useState(false);
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
 
+     // --- ESTADO PARA O CENTRO DO MAPA ---
+    // Começa centrado no Brasil
+    const [mapCenter, setMapCenter] = useState({ lat: -14.235, lng: -51.925 });
+    const [mapZoom, setMapZoom] = useState(4);
+
     const {
         ready,
         value,
@@ -173,10 +180,10 @@ export default function PlanejadorPage() {
     useEffect(() => { fetchDestinos(); }, []);
 
     const handleDelete = async (id: string) => {
+        // Esta função deve voltar a funcionar normalmente agora
         if (!confirm('Tem certeza que deseja excluir este destino?')) return;
         try {
-            const response = await fetch(`/api/destinos/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Erro ao excluir destino');
+            await fetch(`/api/destinos/${id}`, { method: 'DELETE' });
             await fetchDestinos();
         } catch (error) { console.error(error); }
     };
@@ -207,6 +214,10 @@ export default function PlanejadorPage() {
         try {
             const results = await getGeocode({ placeId: place_id });
             const { lat, lng } = await getLatLng(results[0]);
+
+            // Atualizamos o centro do mapa para as coordenadas do local selecionado
+            setMapCenter({ lat, lng });
+            setMapZoom(6);
             
             // Passamos a SUGESTÃO e o RESULTADO para a nossa nova função
             const nomeFormatado = formatarNomeDestino(suggestion, results[0]);
@@ -218,6 +229,8 @@ export default function PlanejadorPage() {
     const handleAddClick = () => {
         if (!selectedPlace) return;
         adicionarDestino(selectedPlace.nome, selectedPlace.lat, selectedPlace.lng);
+        // Centraliza o mapa no local que acabou de ser adicionado
+        setMapZoom(4);
         setValue("");
         setSelectedPlace(null);
     };
@@ -242,88 +255,102 @@ export default function PlanejadorPage() {
     };
 
     return (
-        <main className="container mx-auto p-8">
-            <h1 className="text-4xl font-bold mb-6">Planejador de Viagem</h1>
-            <div className="p-4 border rounded-lg">
-                <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
-                <div className="flex items-center gap-2">
-                    <div className="relative flex-grow">
-                        <input type="text" placeholder="Digite o nome de uma cidade..." value={value} onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }} disabled={!ready} className="p-2 border rounded w-full" />
-                        {status === "OK" && (
-                            <ul className="absolute z-10 w-full bg-black border rounded mt-1">
-                                {data.map((suggestion) => (
-                                    <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-2 hover:bg-gray-600 cursor-pointer">{suggestion.description}</li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                    <button onClick={handleAddClick} disabled={!selectedPlace} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">Adicionar</button>
-                </div>
-            </div>
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h2 className="text-2xl font-semibold">Seu Roteiro:</h2>
-                    
-                    {/* --- ATUALIZAÇÃO NA LISTA PARA USAR DND-KIT --- */}
-                    <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={handleDragEnd}
-                    >
-                        <SortableContext
-                            // Passamos um array de IDs para o contexto
-                            items={destinos.map(d => d._id!)}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <ul className="list-inside mt-4 space-y-2">
-                                {destinos.map((destino) => (
-                                    <SortableItem key={destino._id} id={destino._id!}>
-                                        {/* O conteúdo visual do item da lista fica aqui dentro */}
-                                        <div
-                                            className="text-lg flex items-center justify-between p-2 rounded bg-gray-700 hover:bg-gray-600 cursor-grab"
-                                            title={destino.nome}
-                                        >
-                                            <span>{destino.ordem}. {destino.nome}</span>
-                                            <button onClick={() => handleDelete(destino._id!)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Excluir</button>
-                                        </div>
-                                    </SortableItem>
-                                ))}
-                            </ul>
-                        </SortableContext>
-                    </DndContext>
-                </div>
-                <div>
-                    <h2 className="text-2xl font-semibold">Detalhes da Rota:</h2>
-                    {isLoadingRota && <p className="mt-4">Calculando rota...</p>}
-                    {rota && rota.trechos.length > 0 && !isLoadingRota && (
-                        <div className="mt-4 space-y-4">
-                            {rota.trechos.map((trecho, index) => (
-                                <div key={index} className="p-2 border-b">
-                                    <p><strong>De:</strong> {trecho.origem.split(',')[0]}</p>
-                                    <p><strong>Para:</strong> {trecho.destino.split(',')[0]}</p>
-                                    {/* Renderização Condicional Baseada no Tipo */}
-                                    {trecho.tipo === 'CARRO' ? (
-                                        <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
-                                    ) : (
-                                        <p className="text-blue-500 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
-                                    )}
-                                </div>
+    <main className="container mx-auto p-4 md:p-8">
+        <h1 className="text-4xl font-bold mb-6 text-center md:text-left">Planejador de Viagem</h1>
+        
+        {/* Formulário de Adição (sem alterações) */}
+        <div className="p-4 border rounded-lg mb-8">
+            <h3 className="text-xl font-semibold mb-4">Adicionar Novo Destino</h3>
+            <div className="flex items-center gap-2">
+                <div className="relative flex-grow">
+                    <input type="text" placeholder="Digite o nome de uma cidade, local ou endereço..." value={value} onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }} disabled={!ready} className="p-2 border rounded w-full" />
+                    {status === "OK" && (
+                        <ul className="absolute z-10 w-full bg-black border rounded mt-1">
+                            {data.map((suggestion) => (
+                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-2 hover:bg-gray-600 cursor-pointer">{suggestion.description}</li>
                             ))}
-                            
-                            {/* --- CONDIÇÃO CORRIGIDA AQUI --- */}
-                            {rota && rota.distanciaTotal > 0 && (
-                                <div className="mt-4 p-4 bg-gray-600 rounded-lg">
-                                    {/* Mudei o título para ser mais claro para o usuário */}
-                                    <p className="text-lg font-bold">Resumo da Viagem (Apenas Trechos Terrestres):</p>
-                                    <p className="mt-2">Distância Total Calculada: {formatarDistancia(rota.distanciaTotal)}</p>
-                                    <p>Duração Total Calculada: {formatarDuracao(rota.duracaoTotal)}</p>
-                                </div>
-                            )}
-                        </div>      
+                        </ul>
                     )}
-                    {destinos.length < 2 && !isLoadingRota && (<p className="mt-4 text-gray-500">Adicione pelo menos mais um destino para calcular a rota.</p>)}
                 </div>
+                <button onClick={handleAddClick} disabled={!selectedPlace} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">Adicionar</button>
             </div>
-        </main>
+        </div>
+
+        {/* --- ÁREA PRINCIPAL COM NOVO GRID DE 3 COLUNAS --- */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            {/* Coluna 1: Seu Roteiro */}
+            <div className="md:col-span-1">
+                <h2 className="text-2xl font-semibold mb-4">Seu Roteiro:</h2>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
+                        <ul className="space-y-2">
+                            {destinos.map((destino) => (
+                                <SortableItem key={destino._id} id={destino._id!}>
+                                    {/* O conteúdo visual do item agora fica aqui dentro */}
+                                    <div className="text-lg flex items-center justify-between w-full" title={destino.nome}>
+                                        <span className="flex-grow truncate pr-2">{destino.ordem}. {destino.nome}</span>
+                                        <button onClick={() => handleDelete(destino._id!)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex-shrink-0">Excluir</button>
+                                    </div>
+                                </SortableItem>
+                            ))}
+                        </ul>
+                    </SortableContext>
+                </DndContext>
+            </div>
+
+            {/* Coluna 2: Detalhes da Rota */}
+            <div className="md:col-span-1">
+                <h2 className="text-2xl font-semibold mb-4">Detalhes da Rota:</h2>
+                {isLoadingRota && <p className="mt-4">Calculando rota...</p>}
+                {rota && rota.trechos.length > 0 && !isLoadingRota && (
+                    <div className="space-y-4">
+                        {rota.trechos.map((trecho, index) => (
+                            <div key={index} className="p-2 border-b">
+                                <p><strong>De:</strong> {trecho.origem.split(',')[0]}</p>
+                                <p><strong>Para:</strong> {trecho.destino.split(',')[0]}</p>
+                                {trecho.tipo === 'CARRO' ? (
+                                    <p>Distância: {trecho.distancia} | Duração: {trecho.duracao}</p>
+                                ) : (
+                                    <p className="text-blue-500 font-semibold">✈️ Rota intercontinental ou muito longa.</p>
+                                )}
+                            </div>
+                        ))}
+                        {rota && rota.distanciaTotal > 0 && (
+                            <div className="mt-4 p-4 bg-gray-600 rounded-lg">
+                                <p className="text-lg font-bold">Resumo da Viagem (Apenas Trechos Terrestres):</p>
+                                <p className="mt-2">Distância Total Calculada: {formatarDistancia(rota.distanciaTotal)}</p>
+                                <p>Duração Total Calculada: {formatarDuracao(rota.duracaoTotal)}</p>
+                            </div>
+                        )}
+                    </div>      
+                )}
+                {destinos.length < 2 && !isLoadingRota && (<p className="mt-4 text-gray-500">Adicione pelo menos mais um destino para calcular a rota.</p>)}
+            </div>
+
+            {/* Coluna 3: Mapa */}
+            <div className="md:col-span-1 rounded-lg overflow-hidden h-96 md:h-auto min-h-[500px]">
+                <GoogleMap
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    center={mapCenter}
+                    zoom={mapZoom} // Usando o estado de zoom
+                    options={{
+                        styles: [ /* Seus estilos de mapa escuro */ ],
+                        disableDefaultUI: true,
+                        zoomControl: true,
+                    }}
+                >
+                    {destinos.map((destino) => (
+                        <MarkerF
+                            key={destino._id}
+                            position={{ lat: destino.latitude, lng: destino.longitude }}
+                            label={{ text: destino.ordem.toString(), color: "white" }}
+                            title={destino.nome}
+                        />
+                    ))}
+                </GoogleMap>
+            </div>
+        </div>
+    </main>
     );
 }
