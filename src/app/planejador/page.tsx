@@ -7,7 +7,7 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from 'use-places-autocomplete';
 
-import { FaListUl, FaMap, FaMapMarkedAlt, FaProjectDiagram, FaRegClock, FaRoute } from 'react-icons/fa';
+import { FaCrosshairs, FaListUl, FaMap, FaMapMarkedAlt, FaProjectDiagram, FaRegClock, FaRoute } from 'react-icons/fa';
 
 // --- NOVAS IMPORTAÇÕES DO DND-KIT ---
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -93,6 +93,7 @@ export default function PlanejadorPage() {
     const [isLoadingRota, setIsLoadingRota] = useState(false);
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
      // --- ESTADO PARA O CENTRO DO MAPA ---
     // Começa centrado no Brasil
@@ -115,6 +116,54 @@ export default function PlanejadorPage() {
           coordinateGetter: sortableKeyboardCoordinates,
         })
     );
+
+    const handleGetCurrentLocation = async () => {
+        if (!navigator.geolocation) {
+            alert("Geolocalização não é suportada pelo seu navegador.");
+            return;
+        }
+
+        setIsFetchingLocation(true);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const results = await getGeocode({ location: { lat: latitude, lng: longitude } });
+
+                    // --- NOVA LÓGICA PARA ENCONTRAR A CIDADE ---
+                    let cidadeResult = results.find(r => r.types.includes("locality"));
+                    
+                    // Se não encontrar 'locality', usa o primeiro resultado como fallback
+                    if (!cidadeResult) {
+                        cidadeResult = results[0];
+                    }
+
+                    if (cidadeResult) {
+                        const { lat, lng } = await getLatLng(cidadeResult);
+                        const nomeFormatado = cidadeResult.formatted_address;
+                        
+                        // Validação para não adicionar a mesma cidade em sequência
+                        if (destinos.length > 0 && destinos[destinos.length - 1].nome === nomeFormatado) {
+                            alert("Sua localização atual já é o último destino da lista.");
+                        } else {
+                            adicionarDestino(nomeFormatado, lat, lng);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Erro ao reverter geocode:", error);
+                    alert("Não foi possível encontrar o endereço para sua localização.");
+                } finally {
+                    setIsFetchingLocation(false);
+                }
+            },
+            (error) => {
+                console.error("Erro de Geolocalização:", error);
+                alert("Não foi possível obter sua localização. Verifique as permissões do navegador.");
+                setIsFetchingLocation(false);
+            }
+        );
+    };
 
     // --- NOVA FUNÇÃO onDragEnd ---
     const handleDragEnd = (event: DragEndEvent) => {
@@ -327,7 +376,7 @@ export default function PlanejadorPage() {
         </h1>
     </div>
 
-    {/* --- CARD DE ADIÇÃO DE DESTINO --- */}
+    {/* --- CARD DE ADIÇÃO DE DESTINO (COM LAYOUT MELHORADO) --- */}
     <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
         <h3 className="flex items-center gap-3 text-xl font-semibold mb-4 text-white">
             <FaMapMarkedAlt className="text-sky-400" />
@@ -337,7 +386,7 @@ export default function PlanejadorPage() {
             <div className="relative flex-grow w-full">
                 <input
                     type="text"
-                    placeholder="Digite um local, cidade ou endereço..."
+                    placeholder={destinos.length === 0 ? "Adicione seu ponto de partida..." : "Adicione o próximo destino..."}
                     value={value}
                     onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
                     disabled={!ready}
@@ -355,6 +404,32 @@ export default function PlanejadorPage() {
                 {isSubmitting ? 'Adicionando...' : 'Adicionar'}
             </button>
         </div>
+        {/* --- NOVA DICA DE TEXTO PARA LOCALIZAÇÃO ATUAL --- */}
+        <div className="flex justify-end mt-2">
+            <button 
+                onClick={handleGetCurrentLocation} 
+                disabled={isFetchingLocation} 
+                className="flex items-center gap-2 text-xs text-slate-400 hover:text-sky-400 disabled:text-slate-600 transition-colors"
+            >
+                {isFetchingLocation ? (
+                    <>
+                        <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+                        Buscando...
+                    </>
+                ) : (
+                    <>
+                        <FaCrosshairs />
+                        Usar minha localização atual
+                    </>
+                )}
+            </button>
+        </div>
+        {/* --- DICA DE TEXTO CONDICIONAL ADICIONADA AQUI --- */}
+        {destinos.length === 0 && (
+            <p className="text-center text-xs text-slate-500 mt-4">
+                Dica: Para um melhor planejamento, comece adicionando seu ponto de partida.
+            </p>
+        )}
     </div>
 
     {/* --- ÁREA PRINCIPAL COM 3 COLUNAS --- */}
@@ -409,7 +484,7 @@ export default function PlanejadorPage() {
                 
                 <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
                     {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
-                    {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
+                    {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione pelo menos dois destinos para visualizar os detalhes da rota.</p>)}
                     {rota && rota.trechos.length > 0 && !isLoadingRota && (
                         <div className="space-y-3">
                             {rota.trechos.map((trecho, index) => (
