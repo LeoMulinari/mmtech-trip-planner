@@ -92,6 +92,7 @@ export default function PlanejadorPage() {
     const [rota, setRota] = useState<RotaData | null>(null);
     const [isLoadingRota, setIsLoadingRota] = useState(false);
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
      // --- ESTADO PARA O CENTRO DO MAPA ---
     // Começa centrado no Brasil
@@ -162,7 +163,10 @@ export default function PlanejadorPage() {
             if (!response.ok) throw new Error('Erro ao buscar destinos');
             const data: Destino[] = await response.json();
             setDestinos(data);
-        } catch (error) { console.error(error); }
+        } catch (error) {
+            console.error(error);
+            alert("Não foi possível carregar seus destinos. Verifique sua conexão ou tente mais tarde.");
+        }
     };
 
     useEffect(() => { fetchDestinos(); }, []);
@@ -170,10 +174,16 @@ export default function PlanejadorPage() {
     const handleDelete = async (id: string) => {
         // Esta função deve voltar a funcionar normalmente agora
         if (!confirm('Tem certeza que deseja excluir este destino?')) return;
+        setIsSubmitting(true);
         try {
             await fetch(`/api/destinos/${id}`, { method: 'DELETE' });
             await fetchDestinos();
-        } catch (error) { console.error(error); }
+        } catch (error) {
+            console.error(error);
+            alert("Houve um erro ao excluir o destino. Tente novamente."); // Feedback de erro!
+        } finally {
+            setIsSubmitting(false); // << Finaliza o loading
+        }
     };
     
     useEffect(() => {
@@ -216,23 +226,42 @@ export default function PlanejadorPage() {
 
     const handleAddClick = () => {
         if (!selectedPlace) return;
+
+        // --- NOVA VALIDAÇÃO INTELIGENTE ---
+        // 1. Verifica se a lista de destinos não está vazia
+        if (destinos.length > 0) {
+            // 2. Pega o último destino da lista
+            const ultimoDestino = destinos[destinos.length - 1];
+
+            // 3. Compara o nome do local selecionado com o último da lista
+            if (ultimoDestino.nome === selectedPlace.nome) {
+                alert("Este destino já é o último do seu roteiro. Adicione um destino diferente.");
+                return; // Para a execução
+            }
+        }
+
+        // Se passar na validação (ou se a lista estiver vazia), continua normalmente
         adicionarDestino(selectedPlace.nome, selectedPlace.lat, selectedPlace.lng);
-        // Centraliza o mapa no local que acabou de ser adicionado
-        setMapZoom(4);
         setValue("");
         setSelectedPlace(null);
+        setMapZoom(4);
     };
 
     const adicionarDestino = async (nome: string, latitude: number, longitude: number) => {
+        setIsSubmitting(true); // << Inicia o loading
         try {
-            const response = await fetch('/api/destinos', {
+            await fetch('/api/destinos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, latitude, longitude }),
             });
-            if (!response.ok) throw new Error('Erro ao adicionar destino');
             await fetchDestinos();
-        } catch (error) { console.error(error); }
+        } catch (error) { 
+            console.error(error);
+            alert("Houve um erro ao adicionar o destino. Tente novamente.");
+        } finally {
+            setIsSubmitting(false); // << Finaliza o loading, mesmo se der erro
+        }
     };
 
     const formatarDistancia = (metros: number) => `${(metros / 1000).toFixed(1)} km`;
@@ -271,7 +300,7 @@ export default function PlanejadorPage() {
             </span>
 
             {/* Botão de excluir com hover effect */}
-            <button onClick={() => onDelete(destino._id!)} className="flex-shrink-0 p-1 rounded-full bg-slate-600 text-slate-400 hover:bg-red-500 hover:text-white transition-all">
+            <button onClick={() => onDelete(destino._id!)} disabled={isSubmitting} className="flex-shrink-0 p-1 rounded-full bg-slate-600 text-slate-400 hover:bg-red-500 hover:text-white transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -315,8 +344,8 @@ export default function PlanejadorPage() {
                     </ul>
                 )}
             </div>
-            <button onClick={handleAddClick} disabled={!selectedPlace} className="w-full sm:w-auto px-6 py-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors flex-shrink-0">
-                Adicionar
+            <button onClick={handleAddClick} disabled={!selectedPlace || isSubmitting} className="w-full sm:w-auto px-6 py-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors flex-shrink-0">
+                {isSubmitting ? 'Adicionando...' : 'Adicionar'}
             </button>
         </div>
     </div>
