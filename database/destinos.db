@@ -1,8 +1,4 @@
-{"nome":"Rio de Janeiro, RJ, Brasil","latitude":-22.9068467,"longitude":-43.1728965,"ordem":8,"createdAt":{"$$date":1749440135707},"_id":"9PpRRwsVNdciO4bL"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":7,"createdAt":{"$$date":1749439369196},"_id":"QmR62kg2192rWxVR"}
-{"nome":"Recife, PE, Brasil","latitude":-8.0578381,"longitude":-34.8828969,"ordem":5,"createdAt":{"$$date":1749438056912},"_id":"UyxQ2zMvNOV50fHa"}
-{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":4,"createdAt":{"$$date":1749438037036},"_id":"ZetImVE7cFKiMIqB"}
-{"nome":"João Pessoa, PB, Brasil","latitude":-7.118835199999999,"longitude":-34.8814339,"ordem":6,"createdAt":{"$$date":1749439014147},"_id":"nYGaeY6oKwE8oNzW"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749435606313},"_id":"qc9zmtcfpWWIgFdj"}
-{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":2,"createdAt":{"$$date":1749435614778},"_id":"sStVn7L4v7bGn8ZZ"}
-{"nome":"Juiz de Fora, MG, Brasil","latitude":-21.7623932,"longitude":-43.3434669,"ordem":3,"createdAt":{"$$date":1749438032247},"_id":"xpVA3vn1j0azf0Ws"}
+{"nome":"Goiânia, GO, Brasil","latitude":-16.6868491,"longitude":-49.2707899,"ordem":2,"createdAt":{"$$date":1749493734243},"_id":"031Np7WyM8tw3sBo"}
+{"nome":"Aracaju, SE, Brasil","latitude":-10.9265404,"longitude":-37.0731147,"ordem":3,"createdAt":{"$$date":1749493742732},"_id":"BKufoMXx08PEFAg3"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749493723641},"_id":"X0UN6NhuDdawgPBD"}
+{"nome":"Manaus, AM, Brasil","latitude":-3.1190275,"longitude":-60.0217314,"ordem":4,"createdAt":{"$$date":1749493766335},"_id":"WFbTEPatKFfpJrVs"}
