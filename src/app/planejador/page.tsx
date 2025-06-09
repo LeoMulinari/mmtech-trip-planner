@@ -359,18 +359,12 @@ export default function PlanejadorPage() {
                         <div className="flex justify-around items-center text-center">
                             <div>
                                 {/* ÍCONE ADICIONADO AQUI */}
-                                <p className="flex items-center justify-center gap-2 text-sm uppercase font-semibold text-slate-400 tracking-wider whitespace-nowrap">
-                                    <FaRoute />
-                                    Distância Total
-                                </p>
+                                <p className="text-xs uppercase font-semibold text-slate-400 whitespace-nowrap">Distância Total</p>
                                 <p className="text-2xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
                             </div>
                             <div>
                                 {/* ÍCONE ADICIONADO AQUI */}
-                                <p className="flex items-center justify-center gap-2 text-sm uppercase font-semibold text-slate-400 tracking-wider whitespace-nowrap">
-                                    <FaRegClock />
-                                    Duração Total
-                                </p>
+                                <p className="text-xs uppercase font-semibold text-slate-400 whitespace-nowrap">Duração Total</p>
                                 <p className="text-2xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
                             </div>
                         </div>
@@ -431,6 +425,11 @@ export default function PlanejadorPage() {
             </div>
         </div>
     </div>
-</main>
+    <footer className="text-center mt-12 py-4">
+    <p className="text-sm text-slate-500">
+        Projeto desenvolvido para o processo seletivo da MMTech.
+    </p>
+    </footer>
+    </main>
 );
 }

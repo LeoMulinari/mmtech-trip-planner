@@ -4,7 +4,9 @@ import { useLoadScript } from "@react-google-maps/api";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter'});
+
+
 
 // O tipo Libraries é necessário para o hook useLoadScript
 const libraries: "places"[] = ["places"];
