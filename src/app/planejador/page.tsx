@@ -1,7 +1,9 @@
 // Em: src/app/planejador/page.tsx
 'use client';
 
+import ConfirmationModal from '@/components/ConfirmationModal';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
@@ -94,6 +96,10 @@ export default function PlanejadorPage() {
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+    const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; destinoId: string | null }>({
+        isOpen: false,
+        destinoId: null,
+    });
 
      // --- ESTADO PARA O CENTRO DO MAPA ---
     // Começa centrado no Brasil
@@ -119,7 +125,7 @@ export default function PlanejadorPage() {
 
     const handleGetCurrentLocation = async () => {
         if (!navigator.geolocation) {
-            alert("Geolocalização não é suportada pelo seu navegador.");
+            toast.error("Geolocalização não é suportada pelo seu navegador.");
             return;
         }
 
@@ -144,7 +150,7 @@ export default function PlanejadorPage() {
                         
                         // Validação para não adicionar a mesma cidade em sequência
                         if (destinos.length > 0 && destinos[destinos.length - 1].nome === nomeFormatado) {
-                            alert("Sua localização atual já é o último destino da lista.");
+                            toast.error("Sua localização atual já é o último destino da lista.");
                         } else {
                             adicionarDestino(nomeFormatado, lat, lng);
                         }
@@ -152,14 +158,14 @@ export default function PlanejadorPage() {
 
                 } catch (error) {
                     console.error("Erro ao reverter geocode:", error);
-                    alert("Não foi possível encontrar o endereço para sua localização.");
+                    toast.error("Não foi possível encontrar o endereço para sua localização.");
                 } finally {
                     setIsFetchingLocation(false);
                 }
             },
             (error) => {
                 console.error("Erro de Geolocalização:", error);
-                alert("Não foi possível obter sua localização. Verifique as permissões do navegador.");
+                toast.error("Não foi possível obter sua localização. Verifique as permissões do navegador.");
                 setIsFetchingLocation(false);
             }
         );
@@ -182,7 +188,7 @@ export default function PlanejadorPage() {
             const nextItem = reorderedItems[newIndex + 1];
 
             if ((prevItem && prevItem.nome === movedItem.nome) || (nextItem && nextItem.nome === movedItem.nome)) {
-                alert("Não é permitido ter dois destinos iguais em sequência.");
+                toast.error("Não é permitido ter dois destinos iguais em sequência.");
                 return; // Cancela a operação de reordenar
             }
 
@@ -221,25 +227,36 @@ export default function PlanejadorPage() {
             setDestinos(data);
         } catch (error) {
             console.error(error);
-            alert("Não foi possível carregar seus destinos. Verifique sua conexão ou tente mais tarde.");
+            toast.error("Não foi possível carregar seus destinos. Verifique sua conexão ou tente mais tarde.");
         }
     };
 
     useEffect(() => { fetchDestinos(); }, []);
 
-    const handleDelete = async (id: string) => {
-        // Esta função deve voltar a funcionar normalmente agora
-        if (!confirm('Tem certeza que deseja excluir este destino?')) return;
+    // --- FUNÇÃO handleDelete MODIFICADA ---
+    // Agora ela apenas ABRE o modal de confirmação
+    const handleDelete = (id: string) => {
+        setDeleteModal({ isOpen: true, destinoId: id });
+    };
+
+    // --- NOVA FUNÇÃO que realmente executa a exclusão ---
+    const executarDelete = async () => {
+        if (!deleteModal.destinoId) return;
+
         setIsSubmitting(true);
-        try {
-            await fetch(`/api/destinos/${id}`, { method: 'DELETE' });
-            await fetchDestinos();
-        } catch (error) {
-            console.error(error);
-            alert("Houve um erro ao excluir o destino. Tente novamente."); // Feedback de erro!
-        } finally {
-            setIsSubmitting(false); // << Finaliza o loading
-        }
+        const promise = fetch(`/api/destinos/${deleteModal.destinoId}`, { method: 'DELETE' });
+
+        toast.promise(
+            promise.then(res => {
+                if (!res.ok) throw new Error('Falha ao deletar');
+                return fetchDestinos();
+            }),
+            {
+                loading: 'Excluindo...',
+                success: 'Destino excluído com sucesso!',
+                error: 'Não foi possível excluir o destino.',
+            }
+        ).finally(() => setIsSubmitting(false));
     };
     
     useEffect(() => {
@@ -282,7 +299,7 @@ export default function PlanejadorPage() {
 
     const handleAddClick = () => {
         if (destinos.length >= 25) {
-            alert("Você atingiu o limite de 25 destinos para um único roteiro.");
+            toast.error("Você atingiu o limite de 25 destinos para um único roteiro.");
             return;
         }
         if (!selectedPlace) return;
@@ -295,7 +312,7 @@ export default function PlanejadorPage() {
 
             // 3. Compara o nome do local selecionado com o último da lista
             if (ultimoDestino.nome === selectedPlace.nome) {
-                alert("Este destino já é o último do seu roteiro. Adicione um destino diferente.");
+                toast.error("Este destino já é o último do seu roteiro. Adicione um destino diferente.");
                 return; // Para a execução
             }
         }
@@ -316,9 +333,10 @@ export default function PlanejadorPage() {
                 body: JSON.stringify({ nome, latitude, longitude }),
             });
             await fetchDestinos();
+            toast.success("Destino adicionado!");
         } catch (error) { 
             console.error(error);
-            alert("Houve um erro ao adicionar o destino. Tente novamente.");
+            toast.error("Houve um erro ao adicionar o destino. Tente novamente.");
         } finally {
             setIsSubmitting(false); // << Finaliza o loading, mesmo se der erro
         }
@@ -371,6 +389,7 @@ export default function PlanejadorPage() {
 }
 
     return (
+    <>
     <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         
         {/* --- CABEÇALHO --- */}
@@ -546,5 +565,15 @@ export default function PlanejadorPage() {
     </p>
     </footer>
     </main>
+
+    {/* --- NOSSO MODAL DE CONFIRMAÇÃO --- */}
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, destinoId: null })}
+                onConfirm={executarDelete}
+                title="Confirmar Exclusão"
+                message="Você tem certeza que deseja remover este destino do seu roteiro?"
+            />                
+    </>
 );
 }
