@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
 
 interface Destino {
-    _id?: string;         // Gerado pelo NeDB, opcional no nosso código
+    _id?: string;   
     nome: string;
     latitude: number;
     longitude: number;
     ordem: number;
-    descricao?: string;   // Campo opcional
-    imageUrl?: string;    // Campo opcional
     createdAt: Date;
 }
 
@@ -17,7 +15,7 @@ interface RotaResponse {
         destino: string;
         distancia: string;
         duracao: string;
-        tipo: 'CARRO' | 'VOO_OU_LONGA_DISTANCIA'; // Novo campo para identificar o trecho
+        tipo: 'CARRO' | 'VOO_OU_LONGA_DISTANCIA'; 
     }[];
     distanciaTotal: number; // em metros
     duracaoTotal: number; // em segundos
@@ -47,12 +45,12 @@ export async function POST(request: Request) {
             const origem = destinos[i];
             const destino = destinos[i + 1];
 
-            // Trocamos os nomes pelas coordenadas no formato "latitude,longitude"
+            // Trocamos os nomes pelas coordenadas no formato latitude,longitude
             const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origem.latitude},${origem.longitude}&destination=${destino.latitude},${destino.longitude}&key=${apiKey}&language=pt-BR&units=metric`;
             const googleResponse = await fetch(url);
             const data = await googleResponse.json();
 
-           // SE NÃO HOUVER ROTA, tratamos como um trecho de longa distância
+           // Se não houver rota tratamos como um trecho de longa distância
             if (data.status !== 'OK' || !data.routes[0]?.legs[0]) {
                 console.warn(`Não foi possível encontrar rota terrestre entre ${origem.nome} e ${destino.nome}.`);
                 response.trechos.push({
@@ -60,7 +58,7 @@ export async function POST(request: Request) {
                     destino: destino.nome,
                     distancia: "N/A",
                     duracao: "N/A",
-                    tipo: 'VOO_OU_LONGA_DISTANCIA', // Usamos nosso tipo especial
+                    tipo: 'VOO_OU_LONGA_DISTANCIA',
                 });
                 continue; 
             }
@@ -72,11 +70,11 @@ export async function POST(request: Request) {
                 destino: destino.nome,
                 distancia: leg.distance.text,
                 duracao: leg.duration.text,
-                tipo: 'CARRO', // É uma rota de carro normal
+                tipo: 'CARRO', 
             });
             
-            response.distanciaTotal += leg.distance.value; // valor em metros
-            response.duracaoTotal += leg.duration.value;   // valor em segundos
+            response.distanciaTotal += leg.distance.value; // em metros
+            response.duracaoTotal += leg.duration.value;   // em segundos
         }
 
         return NextResponse.json(response);

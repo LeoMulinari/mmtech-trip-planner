@@ -1,11 +1,4 @@
 {"nome":"Manaus, AM, Brasil","latitude":-3.1190275,"longitude":-60.0217314,"ordem":1,"createdAt":{"$$date":1749493766335},"_id":"WFbTEPatKFfpJrVs"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749497491927},"_id":"XH1QfvK3PJ9CBiRM"}
-{"nome":"Madrid, MD, Espanha","latitude":40.41672790000001,"longitude":-3.7032905,"ordem":5,"createdAt":{"$$date":1749497565763},"_id":"elGwkWCSidRBhDw8"}
-{"nome":"Salvador, BA, Brasil","latitude":-12.9777378,"longitude":-38.5016363,"ordem":3,"createdAt":{"$$date":1749497547262},"_id":"g88Fyar2XG5EBVAo"}
-{"nome":"Belo Horizonte, MG, Brasil","latitude":-19.919052,"longitude":-43.9386685,"ordem":2,"createdAt":{"$$date":1749497514305},"_id":"pMNxbQzgepbZMFBM"}
-{"nome":"Berlim, BE, Alemanha","latitude":52.52000659999999,"longitude":13.404954,"ordem":4,"createdAt":{"$$date":1749497554119},"_id":"tfTDSYQGSgxDmCU2"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749497491927},"_id":"XH1QfvK3PJ9CBiRM"}
-{"nome":"Salvador, BA, Brasil","latitude":-12.9777378,"longitude":-38.5016363,"ordem":2,"createdAt":{"$$date":1749497547262},"_id":"g88Fyar2XG5EBVAo"}
-{"nome":"Belo Horizonte, MG, Brasil","latitude":-19.919052,"longitude":-43.9386685,"ordem":3,"createdAt":{"$$date":1749497514305},"_id":"pMNxbQzgepbZMFBM"}
-{"nome":"Berlim, BE, Alemanha","latitude":52.52000659999999,"longitude":13.404954,"ordem":4,"createdAt":{"$$date":1749497554119},"_id":"tfTDSYQGSgxDmCU2"}
-{"nome":"Madrid, MD, Espanha","latitude":40.41672790000001,"longitude":-3.7032905,"ordem":5,"createdAt":{"$$date":1749497565763},"_id":"elGwkWCSidRBhDw8"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749498541764},"_id":"jqacv9NPuoFZA3er"}
+{"nome":"Museu Oscar Niemeyer | MON, Curitiba, PR, Brasil","latitude":-25.4098994,"longitude":-49.2670599,"ordem":2,"createdAt":{"$$date":1749498653865},"_id":"Y3vKVbvZyBIchAds"}
+{"nome":"Jardim Botânico, Curitiba, PR, Brasil","latitude":-25.4414024,"longitude":-49.24871779999999,"ordem":3,"createdAt":{"$$date":1749498681185},"_id":"TN2gisCeLIXJyHdA"}

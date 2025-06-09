@@ -1,6 +1,4 @@
-// Em: src/components/planner/AddDestinationCard.tsx
 'use client';
-
 import { formatarNomeDestino } from '@/lib/formatters';
 import { Destino, SelectedPlace } from '@/types';
 import { useState } from 'react';
@@ -8,7 +6,6 @@ import toast from 'react-hot-toast';
 import { FaCrosshairs, FaMapMarkedAlt } from 'react-icons/fa';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 
-// Props que o componente recebe da página principal
 type AddDestinationCardProps = {
     destinos: Destino[];
     onAddDestination: (nome: string, latitude: number, longitude: number) => void;
@@ -24,7 +21,6 @@ export default function AddDestinationCard({
     setMapCenter,
     setMapZoom
 }: AddDestinationCardProps) {
-    // Estados relacionados à busca de local foram movidos para cá
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
     const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
@@ -36,6 +32,10 @@ export default function AddDestinationCard({
         clearSuggestions,
     } = usePlacesAutocomplete({ requestOptions: {}, debounce: 300 });
 
+     /**
+     * Chamado quando o usuário clica em uma sugestão do autocomplete.
+     * Prepara o destino para ser adicionado, mas não o adiciona ainda.
+     */
     const handleSelect = async (suggestion: google.maps.places.AutocompletePrediction) => {
         const { place_id } = suggestion;
         setValue(suggestion.description, false);
@@ -52,6 +52,10 @@ export default function AddDestinationCard({
         }
     };
 
+    /**
+     * Chamado pelo botão "Adicionar". Finaliza o processo, validando
+     * e enviando os dados do local selecionado para o componente pai.
+     */
     const handleAddClick = () => {
         if (destinos.length >= 25) {
             toast.error("Você atingiu o limite de 25 destinos.");
@@ -68,7 +72,16 @@ export default function AddDestinationCard({
         setMapZoom(4);
     };
     
+    /**
+     * Pega a localização atual do usuário, priorizando o nome da cidade
+     * para uma melhor experiência no planejamento de rotas.
+     */
     const handleGetCurrentLocation = async () => {
+        if (destinos.length >= 25) {
+            toast.error("Você atingiu o limite de 25 destinos para um único roteiro.");
+            return;
+        }
+    
         if (!navigator.geolocation) {
             toast.error("Geolocalização não é suportada pelo seu navegador.");
             return;
@@ -89,7 +102,6 @@ export default function AddDestinationCard({
                         if (destinos.length > 0 && destinos[destinos.length - 1].nome === nomeFormatado) {
                             toast.error("Sua localização atual já é o último destino da lista.");
                         } else {
-                            // Chamando a função do pai através da prop
                             onAddDestination(nomeFormatado, lat, lng);
                         }
                     }
@@ -136,7 +148,6 @@ export default function AddDestinationCard({
                     {isSubmitting ? 'Adicionando...' : 'Adicionar'}
                 </button>
             </div>
-            {/* --- NOVA DICA DE TEXTO PARA LOCALIZAÇÃO ATUAL --- */}
             <div className="flex justify-end mt-2">
                 <button 
                     onClick={handleGetCurrentLocation} 
@@ -156,7 +167,6 @@ export default function AddDestinationCard({
                     )}
                 </button>
             </div>
-            {/* --- DICA DE TEXTO CONDICIONAL ADICIONADA AQUI --- */}
             {destinos.length === 0 && (
                 <p className="text-center text-xs text-slate-300 mt-4">
                     Dica: Para um melhor planejamento, comece adicionando seu ponto de partida.

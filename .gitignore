@@ -135,13 +135,8 @@ out/
 .AppleDouble
 .LSOverride
 
-# NeDB database files (se você os armazena na raiz ou em uma pasta específica que não quer versionar o *conteúdo* diretamente)
-# Se você criar a pasta 'database' na raiz do projeto como sugeri:
+# NeDB database files 
 database/*.db
-# Se você quiser versionar um arquivo .db de exemplo, mas não os dados reais, ajuste isso.
-# Para o desafio, provavelmente é bom não versionar os arquivos .db se eles contêm dados de teste que mudam muito.
-# Se o arquivo .db for parte da estrutura inicial e estiver vazio ou com dados de seed, você pode querer versioná-lo.
-# Por segurança e para evitar conflitos, geralmente é melhor não versionar arquivos de banco de dados que mudam localmente.
 
 # Turbopack
 .turbo

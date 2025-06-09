@@ -1,6 +1,4 @@
-// Em: src/components/ConfirmationModal.tsx
 'use client';
-
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 

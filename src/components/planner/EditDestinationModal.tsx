@@ -1,5 +1,4 @@
 'use client';
-
 import { formatarNomeDestino } from '@/lib/formatters';
 import { Destino, SelectedPlace } from '@/types';
 import { Dialog, Transition } from '@headlessui/react';
@@ -24,7 +23,7 @@ export default function EditDestinationModal({ isOpen, onClose, onSave, destino 
     clearSuggestions,
   } = usePlacesAutocomplete({ requestOptions: {}, debounce: 300 });
 
-  // Preenche o campo de busca com o nome do destino atual quando o modal abre
+  // Efeito para popular o campo de busca com os dados do destino atual sempre que o modal é aberto ou o destino muda.
   useEffect(() => {
     if (destino) {
       setValue(destino.nome, false);
@@ -45,6 +44,7 @@ export default function EditDestinationModal({ isOpen, onClose, onSave, destino 
     }
   };
 
+  // Ao salvar chama a função onSave do componente pai passando os novos dados.
   const handleSave = () => {
     if (destino?._id && novoDestino) {
       onSave(destino._id, novoDestino);
@@ -67,7 +67,7 @@ export default function EditDestinationModal({ isOpen, onClose, onSave, destino 
                 </Dialog.Title>
                 <div className="mt-4">
                   <div className="relative flex-grow w-full">
-                    <input type="text" value={value} onChange={(e) => setValue(e.target.value)} disabled={!ready} className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-slate-50 placeholder:text-slate-400" />
+                    <input type="text" value={value} onChange={(e) => {setValue(e.target.value); setNovoDestino(null); }} disabled={!ready} className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-slate-50 placeholder:text-slate-400" />
                     {status === "OK" && (
                       <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-40 overflow-y-auto shadow-xl">
                         {data.map((suggestion) => (

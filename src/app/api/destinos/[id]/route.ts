@@ -1,26 +1,21 @@
-// Em: src/app/api/destinos/[id]/route.ts
-
 import { NextResponse } from 'next/server';
-// IMPORTAMOS NOSSA INSTÂNCIA ÚNICA DO DB
 import db from '@/lib/database';
 
 interface Destino {
-    _id?: string;         // Gerado pelo NeDB, opcional no nosso código
+    _id?: string;         
     nome: string; 
     latitude: number;
     longitude: number;
     ordem: number;
-    descricao?: string;   // Campo opcional
-    imageUrl?: string;    // Campo opcional
     createdAt: Date;
 }
 
-// --- FUNÇÃO DELETE (MAIS ROBUSTA) ---
+//  FUNÇÃO DELETE 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
     try {
         const idParaDeletar = params.id;
 
-        // 1. Garante que o destino existe antes de fazer qualquer coisa
+        // Garante que o destino existe antes de fazer qualquer coisa
         const destinoExiste = await new Promise((resolve, reject) => {
             db.findOne({ _id: idParaDeletar }, (err, doc) => {
                 if (err) reject(err);
@@ -32,7 +27,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             return NextResponse.json({ message: 'Destino não encontrado' }, { status: 404 });
         }
 
-        // 2. Remove o destino do banco de dados
+        // Remove o destino do banco de dados
         await new Promise<void>((resolve, reject) => {
             db.remove({ _id: idParaDeletar }, {}, (err) => {
                 if (err) reject(err);
@@ -40,7 +35,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             });
         });
 
-        // 3. Pega TODOS os destinos restantes, já ordenados
+        // Pega todos os destinos restantes, já ordenados
         const destinosRestantes: Destino[] = await new Promise((resolve, reject) => {
             db.find({}).sort({ ordem: 1 }).exec((err, docs) => {
                 if (err) reject(err);
@@ -48,8 +43,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             });
         });
 
-        // 4. Re-indexa a ordem de todos os itens restantes
-        // Isso garante uma sequência contínua (1, 2, 3...)
+        // Reindexa a ordem de todos os itens restantes
         let novaOrdem = 1;
         for (const destino of destinosRestantes) {
             await new Promise<void>((resolve, reject) => {
@@ -69,14 +63,12 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 }
 
-// --- FUNÇÃO PUT ---
-// Atualiza um destino específico
+// FUNÇÃO PUT 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const idParaAtualizar = params.id;
         const body = await request.json();
 
-        // Remove campos que não devem ser atualizados diretamente
         delete body._id;
         delete body.createdAt;
 

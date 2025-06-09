@@ -1,34 +1,35 @@
-// Em: src/app/planejador/page.tsx (Versão Final Refatorada)
 'use client';
-
-import { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
-import { Destino, RotaData, SelectedPlace} from '@/types';
+import { Destino, RotaData, SelectedPlace } from '@/types';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-// Importando nossos novos componentes de UI
+// Componentes de UI
 import ConfirmationModal from '@/components/ConfirmationModal';
 import AddDestinationCard from '@/components/planner/AddDestinationCard';
 import EditDestinationModal from '@/components/planner/EditDestinationModal';
 import ItineraryCard from '@/components/planner/ItineraryCard';
-import RouteDetailsCard from '@/components/planner/RouteDetailsCard';
 import MapCard from '@/components/planner/MapCard';
+import RouteDetailsCard from '@/components/planner/RouteDetailsCard';
 
+/**
+ * Componente principal da página do planejador de viagem.
+ * Atua como um "container" que gerencia todo o estado da aplicação (destinos, rota, etc.)
+ * e a lógica de manipulação de dados. Ele passa os dados e as funções para
+ * componentes filhos, que são responsáveis apenas pela exibição (padrão Container/Presentational).
+ */
 export default function PlanejadorPage() {
-    // --- ESTADOS ---
     const [destinos, setDestinos] = useState<Destino[]>([]);
     const [rota, setRota] = useState<RotaData | null>(null);
     const [isLoadingRota, setIsLoadingRota] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; destinoId: string | null }>({ isOpen: false, destinoId: null });
+    const [editModal, setEditModal] = useState<{ isOpen: boolean; destino: Destino | null }>({ isOpen: false, destino: null});
     const [mapCenter, setMapCenter] = useState({ lat: -14.235, lng: -51.925 });
     const [mapZoom, setMapZoom] = useState(4);
-    const [editModal, setEditModal] = useState<{ isOpen: boolean; destino: Destino | null }>({ isOpen: false, destino: null});
-
-    // --- LÓGICA PRINCIPAL (FUNÇÕES) ---
-    
-    // Função para buscar os destinos iniciais da API
+ 
+    // Busca os destinos iniciais da API quando o componente é montado.
     const fetchDestinos = async () => {
         try {
             const response = await fetch('/api/destinos');
@@ -42,7 +43,7 @@ export default function PlanejadorPage() {
     };
     useEffect(() => { fetchDestinos(); }, []);
 
-    // Função para adicionar um novo destino (passada para AddDestinationCard)
+    // Adiciona um novo destino, chamado pelo AddDestinationCard.
     const adicionarDestino = async (nome: string, latitude: number, longitude: number) => {
         setIsSubmitting(true);
         try {
@@ -62,10 +63,12 @@ export default function PlanejadorPage() {
         }
     };
 
+    // Abre o modal de edição, passando os dados do destino a ser editado.
     const handleOpenEditModal = (destino: Destino) => {
         setEditModal({ isOpen: true, destino: destino });
     };
 
+    // Salva as alterações do destino, chamado pelo EditDestinationModal.
     const handleUpdateDestination = async (id: string, novosDados: SelectedPlace) => {
         setIsSubmitting(true);
         const promise = fetch(`/api/destinos/${id}`, {
@@ -88,10 +91,11 @@ export default function PlanejadorPage() {
         }).finally(() => setIsSubmitting(false));
     };
 
-    // Funções para deletar um destino (passadas para ItineraryCard e ConfirmationModal)
+    // Abre o modal de confirmação de exclusão.
     const handleDelete = (id: string) => {
         setDeleteModal({ isOpen: true, destinoId: id });
     };
+    // Efetivamente executa a exclusão após a confirmação no modal.
     const executarDelete = async () => {
         if (!deleteModal.destinoId) return;
         setIsSubmitting(true);
@@ -108,7 +112,7 @@ export default function PlanejadorPage() {
         }).finally(() => setIsSubmitting(false));
     };
 
-    // Funções para reordenar a lista (passadas para ItineraryCard)
+    // Manipula o fim de uma operação de arrastar, atualizando a ordem no estado e no backend.
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (over && active.id !== over.id) {
@@ -119,15 +123,13 @@ export default function PlanejadorPage() {
             const prevItem = reorderedItems[newIndex - 1];
             const nextItem = reorderedItems[newIndex + 1];
 
+            // Regra de negócio para impedir destinos iguais em sequência.
             if ((prevItem && prevItem.nome === movedItem.nome) || (nextItem && nextItem.nome === movedItem.nome)) {
                 toast.error("Não é permitido ter dois destinos iguais em sequência.");
                 return;
             }
 
-            const updatedDestinos = reorderedItems.map((item, index) => ({
-                ...item,
-                ordem: index + 1,
-            }));
+            const updatedDestinos = reorderedItems.map((item, index) => ({ ...item, ordem: index + 1 }));
             setDestinos(updatedDestinos);
             updateOrdemNoBackend(updatedDestinos);
         }
@@ -142,7 +144,8 @@ export default function PlanejadorPage() {
         } catch (error) { console.error("Erro ao salvar a nova ordem:", error); }
     };
     
-    // Efeito para calcular a rota sempre que a lista de destinos mudar
+    // Efeito reativo: sempre que a lista de 'destinos' é alterada (adicionada, removida, reordenada),
+    // esta função é acionada automaticamente para recalcular a rota completa.
     useEffect(() => {
         const calcularRota = async () => {
             if (destinos.length < 2) { setRota(null); return; }

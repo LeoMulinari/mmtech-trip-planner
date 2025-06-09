@@ -1,11 +1,8 @@
-// Em: src/components/planner/MapCard.tsx
 'use client';
-
 import { GoogleMap, MarkerF } from '@react-google-maps/api';
 import { FaMap } from 'react-icons/fa';
 import { Destino } from '@/types';
 
-// Props que o componente recebe
 type MapCardProps = {
   destinos: Destino[];
   mapCenter: { lat: number; lng: number; };
@@ -25,7 +22,7 @@ export default function MapCard({ destinos, mapCenter, mapZoom }: MapCardProps) 
           center={mapCenter}
           zoom={mapZoom}
           options={{ 
-            styles: [/* Seus estilos de mapa escuro */], 
+            styles: [], 
             disableDefaultUI: true, 
             zoomControl: true 
           }}
