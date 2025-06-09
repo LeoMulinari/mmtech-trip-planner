@@ -281,6 +281,10 @@ export default function PlanejadorPage() {
     };
 
     const handleAddClick = () => {
+        if (destinos.length >= 25) {
+            alert("Você atingiu o limite de 25 destinos para um único roteiro.");
+            return;
+        }
         if (!selectedPlace) return;
 
         // --- NOVA VALIDAÇÃO INTELIGENTE ---

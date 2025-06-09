@@ -1,2 +1,25 @@
 {"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749435606313},"_id":"qc9zmtcfpWWIgFdj"}
 {"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":2,"createdAt":{"$$date":1749435614778},"_id":"sStVn7L4v7bGn8ZZ"}
+{"nome":"Albânia","latitude":41.153332,"longitude":20.168331,"ordem":3,"createdAt":{"$$date":1749437939472},"_id":"CV6HsKVFfq0YAhFa"}
+{"nome":"Adana, Turquia","latitude":37.2612315,"longitude":35.3905046,"ordem":4,"createdAt":{"$$date":1749437942823},"_id":"sudbg4G6JZajyJqH"}
+{"nome":"Gaza","latitude":31.5016951,"longitude":34.4668445,"ordem":5,"createdAt":{"$$date":1749437950899},"_id":"YSGH366h9r0CIaKt"}
+{"nome":"Flórida, FL, Estados Unidos","latitude":27.6648274,"longitude":-81.5157535,"ordem":6,"createdAt":{"$$date":1749437957494},"_id":"VkJuZHw1Cjnb7fQb"}
+{"nome":"Filipinas","latitude":12.879721,"longitude":121.774017,"ordem":7,"createdAt":{"$$date":1749437961169},"_id":"PUo2zS2u6GUp6uTE"}
+{"nome":"Avignon, Avinhão, Provença-Alpes-Costa Azul, França","latitude":43.9486986,"longitude":4.8059401,"ordem":8,"createdAt":{"$$date":1749437964778},"_id":"7OxyI1pl2gRoqfOg"}
+{"nome":"Nigéria","latitude":9.081999,"longitude":8.675277,"ordem":9,"createdAt":{"$$date":1749437968729},"_id":"9vHxyw3BIz1iciM3"}
+{"nome":"Los Angeles, CA, Estados Unidos","latitude":34.0549076,"longitude":-118.242643,"ordem":10,"createdAt":{"$$date":1749437971913},"_id":"m3AvTwvPnibwghXk"}
+{"nome":"Erfurt, TH, Alemanha","latitude":50.98476789999999,"longitude":11.0298799,"ordem":11,"createdAt":{"$$date":1749437975728},"_id":"wIDOrZmSdJFk9jzS"}
+{"nome":"Bangladesh","latitude":23.684994,"longitude":90.356331,"ordem":12,"createdAt":{"$$date":1749437980608},"_id":"PeGMUr3E6cKKByAA"}
+{"nome":"Tunísia","latitude":33.886917,"longitude":9.537499,"ordem":13,"createdAt":{"$$date":1749437983698},"_id":"dbOZWY3PTuNN5ZTg"}
+{"nome":"Tirupati, AP, Índia","latitude":13.6287557,"longitude":79.4191795,"ordem":14,"createdAt":{"$$date":1749437987333},"_id":"YKGDalLd1mtDExCl"}
+{"nome":"Toronto, ON, Canadá","latitude":43.653226,"longitude":-79.3831843,"ordem":15,"createdAt":{"$$date":1749437991061},"_id":"xv0DHDHpqV92CyFE"}
+{"nome":"República Dominicana","latitude":18.735693,"longitude":-70.162651,"ordem":16,"createdAt":{"$$date":1749437994472},"_id":"S3Iumr2mFmHYppBo"}
+{"nome":"Venezuela","latitude":6.42375,"longitude":-66.58973,"ordem":17,"createdAt":{"$$date":1749437997943},"_id":"KzN4KL2CZ5Gh77cP"}
+{"nome":"Fethiye, Muğla, Turquia","latitude":36.659246,"longitude":29.126347,"ordem":18,"createdAt":{"$$date":1749438023871},"_id":"X1nxySFFacI0BkwV"}
+{"nome":"Bytom, Silésia, Polônia","latitude":50.3483816,"longitude":18.9157175,"ordem":19,"createdAt":{"$$date":1749438028784},"_id":"hiEHeKd9ws6dWCEr"}
+{"nome":"Juiz de Fora, MG, Brasil","latitude":-21.7623932,"longitude":-43.3434669,"ordem":20,"createdAt":{"$$date":1749438032247},"_id":"xpVA3vn1j0azf0Ws"}
+{"nome":"Brasília, DF, Brasil","latitude":-15.7975154,"longitude":-47.89188739999999,"ordem":21,"createdAt":{"$$date":1749438037036},"_id":"ZetImVE7cFKiMIqB"}
+{"nome":"Curitiba, PR, Brasil","latitude":-25.4268985,"longitude":-49.2651984,"ordem":22,"createdAt":{"$$date":1749438040654},"_id":"iapMwZg9GqLp5EZh"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":23,"createdAt":{"$$date":1749438048180},"_id":"M0ltUeKOAZramH5R"}
+{"nome":"Ipiranga, São Paulo, SP, Brasil","latitude":-23.5880611,"longitude":-46.6040369,"ordem":24,"createdAt":{"$$date":1749438051672},"_id":"s3QKR0IetSVwQcfN"}
+{"nome":"Recife, PE, Brasil","latitude":-8.0578381,"longitude":-34.8828969,"ordem":25,"createdAt":{"$$date":1749438056912},"_id":"UyxQ2zMvNOV50fHa"}
