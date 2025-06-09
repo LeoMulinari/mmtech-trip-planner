@@ -141,7 +141,7 @@ export default function AddDestinationCard({
                 <button 
                     onClick={handleGetCurrentLocation} 
                     disabled={isFetchingLocation} 
-                    className="flex items-center gap-2 text-xs text-slate-400 hover:text-sky-400 disabled:text-slate-600 transition-colors"
+                    className="flex items-center gap-2 text-xs text-slate-300 hover:text-sky-400 disabled:text-slate-600 transition-colors"
                 >
                     {isFetchingLocation ? (
                         <>
@@ -158,7 +158,7 @@ export default function AddDestinationCard({
             </div>
             {/* --- DICA DE TEXTO CONDICIONAL ADICIONADA AQUI --- */}
             {destinos.length === 0 && (
-                <p className="text-center text-xs text-slate-500 mt-4">
+                <p className="text-center text-xs text-slate-300 mt-4">
                     Dica: Para um melhor planejamento, comece adicionando seu ponto de partida.
                 </p>
             )}

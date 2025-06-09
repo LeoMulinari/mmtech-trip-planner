@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
-import { Destino, SelectedPlace } from '@/types';
 import { formatarNomeDestino } from '@/lib/formatters';
+import { Destino, SelectedPlace } from '@/types';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useEffect, useState } from 'react';
+import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 
 type EditModalProps = {
   isOpen: boolean;
@@ -61,17 +61,17 @@ export default function EditDestinationModal({ isOpen, onClose, onSave, destino 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-800 p-6 text-left align-middle shadow-xl transition-all border border-slate-700">
+              <Dialog.Panel className="w-full max-w-md transform rounded-2xl bg-slate-800 p-6 text-left align-middle shadow-xl transition-all border border-slate-700 overflow-visible">
                 <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-white">
                   Editar Destino
                 </Dialog.Title>
                 <div className="mt-4">
                   <div className="relative flex-grow w-full">
-                    <input type="text" value={value} onChange={(e) => setValue(e.target.value)} disabled={!ready} className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500" />
+                    <input type="text" value={value} onChange={(e) => setValue(e.target.value)} disabled={!ready} className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-slate-50 placeholder:text-slate-400" />
                     {status === "OK" && (
-                      <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
+                      <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-40 overflow-y-auto shadow-xl">
                         {data.map((suggestion) => (
-                          <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer">{suggestion.description}</li>
+                          <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer text-slate-50">{suggestion.description}</li>
                         ))}
                       </ul>
                     )}
