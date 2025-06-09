@@ -7,6 +7,7 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from 'use-places-autocomplete';
 
+import { FaListUl, FaMap, FaMapMarkedAlt, FaProjectDiagram, FaRegClock, FaRoute } from 'react-icons/fa';
 
 // --- NOVAS IMPORTAÇÕES DO DND-KIT ---
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -284,101 +285,118 @@ export default function PlanejadorPage() {
     <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         
         {/* --- CABEÇALHO --- */}
-        <div className="text-center mb-8">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-                Planejador de <span className="text-sky-400">Viagem</span>
-            </h1>
-        </div>
+    <div className="text-center mb-8">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            Planejador de <span className="text-sky-400">Viagem</span>
+        </h1>
+    </div>
 
-        {/* --- CARD DE ADIÇÃO DE DESTINO --- */}
-        <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
-            <h3 className="text-xl font-semibold mb-4 text-white">Adicionar Novo Destino</h3>
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-                <div className="relative flex-grow w-full">
-                    <input
-                        type="text"
-                        placeholder="Digite um local, cidade ou endereço..."
-                        value={value}
-                        onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
-                        disabled={!ready}
-                        className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-400 text-slate-50"
-                    />
-                    {status === "OK" && (
-                        <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
-                            {data.map((suggestion) => (
-                                <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer transition-colors text-slate-50">{suggestion.description}</li>
+    {/* --- CARD DE ADIÇÃO DE DESTINO --- */}
+    <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg mb-8">
+        <h3 className="flex items-center gap-3 text-xl font-semibold mb-4 text-white">
+            <FaMapMarkedAlt className="text-sky-400" />
+            Adicionar Novo Destino
+        </h3>
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative flex-grow w-full">
+                <input
+                    type="text"
+                    placeholder="Digite um local, cidade ou endereço..."
+                    value={value}
+                    onChange={(e) => { setValue(e.target.value); setSelectedPlace(null); }}
+                    disabled={!ready}
+                    className="p-3 w-full border-2 border-slate-600 bg-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-400 text-slate-50"
+                />
+                {status === "OK" && (
+                    <ul className="absolute z-10 w-full bg-slate-700 border border-slate-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-xl">
+                        {data.map((suggestion) => (
+                            <li key={suggestion.place_id} onClick={() => handleSelect(suggestion)} className="p-3 hover:bg-sky-600 cursor-pointer transition-colors text-slate-50">{suggestion.description}</li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+            <button onClick={handleAddClick} disabled={!selectedPlace} className="w-full sm:w-auto px-6 py-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors flex-shrink-0">
+                Adicionar
+            </button>
+        </div>
+    </div>
+
+    {/* --- ÁREA PRINCIPAL COM 3 COLUNAS --- */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        {/* Coluna 1: Seu Roteiro */}
+        <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+            <div className="flex justify-between items-baseline mb-4 flex-shrink-0">
+                <h2 className="flex items-center gap-3 text-2xl font-semibold text-white">
+                    <FaListUl className="text-sky-400" />
+                    Seu Roteiro
+                </h2>
+                <p className="text-xs text-slate-400 italic">Arraste para reordenar</p>
+            </div>
+            <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
+                        <ul className="space-y-3">
+                            {destinos.map((destino) => (
+                                <SortableListItem key={destino._id} destino={destino} onDelete={handleDelete} />
                             ))}
                         </ul>
-                    )}
-                </div>
-                <button onClick={handleAddClick} disabled={!selectedPlace} className="w-full sm:w-auto px-6 py-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors flex-shrink-0">
-                    Adicionar
-                </button>
+                    </SortableContext>
+                </DndContext>
             </div>
         </div>
 
-        {/* --- ÁREA PRINCIPAL COM 3 COLUNAS DEFINITIVAS --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            {/* Coluna 1: Seu Roteiro */}
+        {/* Coluna 2: Detalhes da Rota (com Resumo integrado) */}
             <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
-                <div className="flex justify-between items-baseline mb-4 flex-shrink-0">
-                    <h2 className="text-2xl font-semibold text-white">Seu Roteiro</h2>
-                    <p className="text-xs text-slate-400 italic">Arraste para reordenar</p>
-                </div>
-                <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={destinos.map(d => d._id!)} strategy={verticalListSortingStrategy}>
-                            <ul className="space-y-3">
-                                {destinos.map((destino) => (
-                                    <SortableListItem key={destino._id} destino={destino} onDelete={handleDelete} />
-                                ))}
-                            </ul>
-                        </SortableContext>
-                    </DndContext>
-                </div>
-            </div>
-
-            {/* Coluna 2: Resumo e Detalhes da Rota */}
-            <div className="flex flex-col gap-8">
-                {/* O CARD DE RESUMO DA VIAGEM AGORA ESTÁ AQUI NO TOPO DA SEGUNDA COLUNA */}
+                <h2 className="flex items-center gap-3 text-2xl font-semibold mb-4 text-white flex-shrink-0">
+                    <FaProjectDiagram className="text-sky-400" />
+                    Detalhes da Rota
+                </h2>
+                
+                {/* Card de Resumo da Viagem */}
                 {rota && rota.distanciaTotal > 0 && (
-                    <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
-                        <div className="flex flex-col sm:flex-row justify-around items-center text-center">
-                            <div className="w-full sm:w-auto">
-                                <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Distância Terrestre</p>
-                                <p className="text-3xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
+                    <div className="p-4 mb-6 bg-slate-700/50 rounded-lg">
+                        <div className="flex justify-around items-center text-center">
+                            <div>
+                                {/* ÍCONE ADICIONADO AQUI */}
+                                <p className="flex items-center justify-center gap-2 text-sm uppercase font-semibold text-slate-400 tracking-wider whitespace-nowrap">
+                                    <FaRoute />
+                                    Distância Total
+                                </p>
+                                <p className="text-2xl font-bold text-sky-400">{formatarDistancia(rota.distanciaTotal)}</p>
                             </div>
-                            <div className="w-full sm:w-auto border-t border-slate-700 sm:border-t-0 sm:border-l sm:h-16 my-4 sm:my-0 mx-8"></div>
-                            <div className="w-full sm:w-auto">
-                                <p className="text-sm uppercase font-semibold text-slate-400 tracking-wider">Duração Estimada</p>
-                                <p className="text-3xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
+                            <div>
+                                {/* ÍCONE ADICIONADO AQUI */}
+                                <p className="flex items-center justify-center gap-2 text-sm uppercase font-semibold text-slate-400 tracking-wider whitespace-nowrap">
+                                    <FaRegClock />
+                                    Duração Total
+                                </p>
+                                <p className="text-2xl font-bold text-sky-400">{formatarDuracao(rota.duracaoTotal)}</p>
                             </div>
                         </div>
                     </div>
                 )}
                 
-                {/* Coluna 2: Detalhes da Rota (COM A MUDANÇA) */}
-            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Detalhes da Rota</h2>
                 <div className="overflow-y-auto pr-2 -mr-2 flex-grow">
                     {isLoadingRota && <p className="text-slate-400">Calculando rota...</p>}
                     {!isLoadingRota && destinos.length < 2 && (<p className="text-slate-500">Adicione mais um destino.</p>)}
                     {rota && rota.trechos.length > 0 && !isLoadingRota && (
                         <div className="space-y-3">
                             {rota.trechos.map((trecho, index) => (
-                                // --- ESTE É O BLOCO QUE MUDOU ---
-                                <div key={index} className="p-2 border-b border-slate-700 text-sm">
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="font-semibold text-white truncate" title={trecho.origem}>{trecho.origem.split(',')[0]}</span>
+                                <div key={index} className="p-3 border-b border-slate-700 text-sm">
+                                    <div className="flex items-center gap-2 flex-wrap font-semibold text-white">
+                                        <span className="truncate" title={trecho.origem}>{trecho.origem.split(',')[0]}</span>
                                         <span className="text-sky-400">→</span>
-                                        <span className="font-semibold text-white truncate" title={trecho.destino}>{trecho.destino.split(',')[0]}</span>
+                                        <span className="truncate" title={trecho.destino}>{trecho.destino.split(',')[0]}</span>
                                     </div>
-                                    <div className="mt-1 text-slate-400">
+                                    <div className="mt-2 text-slate-400">
                                         {trecho.tipo === 'CARRO' ? (
-                                            <span>{trecho.distancia} <span className="text-slate-600 mx-1">|</span> {trecho.duracao}</span>
+                                            <div className="flex items-center gap-4">
+                                                <span className="flex items-center gap-2"><FaRoute /> {trecho.distancia}</span>
+                                                <span className="flex items-center gap-2"><FaRegClock /> {trecho.duracao}</span>
+                                            </div>
                                         ) : (
-                                            <span className="text-sky-400 font-semibold">✈️ Rota intercontinental ou longa</span>
+                                            <span className="text-sky-400 font-semibold">✈️ Rota não calculável (viagem longa ou aérea)</span>
                                         )}
                                     </div>
                                 </div>
@@ -387,30 +405,32 @@ export default function PlanejadorPage() {
                     )}
                 </div>
             </div>
-            </div>
 
-            {/* Coluna 3: Mapa */}
-            <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
-                <h2 className="text-2xl font-semibold mb-4 text-white flex-shrink-0">Mapa do Roteiro</h2>
-                <div className="rounded-lg overflow-hidden flex-grow min-h-[400px]">
-                    <GoogleMap
-                        mapContainerStyle={{ width: '100%', height: '100%' }}
-                        center={mapCenter}
-                        zoom={mapZoom}
-                        options={{ styles: [/* Seus estilos de mapa escuro */], disableDefaultUI: true, zoomControl: true }}
-                    >
-                        {destinos.map((destino) => (
-                            <MarkerF
-                                key={destino._id}
-                                position={{ lat: destino.latitude, lng: destino.longitude }}
-                                label={{ text: destino.ordem.toString(), color: "white", fontWeight: "bold" }}
-                                title={destino.nome}
-                            />
-                        ))}
-                    </GoogleMap>
-                </div>
+        {/* Coluna 3: Mapa */}
+        <div className="p-6 bg-slate-800 border border-slate-700 rounded-xl flex flex-col">
+            <h2 className="flex items-center gap-3 text-2xl font-semibold mb-4 text-white flex-shrink-0">
+                <FaMap className="text-sky-400" />
+                Mapa do Roteiro
+            </h2>
+            <div className="rounded-lg overflow-hidden flex-grow min-h-[400px]">
+                <GoogleMap
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    center={mapCenter}
+                    zoom={mapZoom}
+                    options={{ styles: [/* Seus estilos de mapa escuro */], disableDefaultUI: true, zoomControl: true }}
+                >
+                    {destinos.map((destino) => (
+                        <MarkerF
+                            key={destino._id}
+                            position={{ lat: destino.latitude, lng: destino.longitude }}
+                            label={{ text: destino.ordem.toString(), color: "white", fontWeight: "bold" }}
+                            title={destino.nome}
+                        />
+                    ))}
+                </GoogleMap>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 );
 }
