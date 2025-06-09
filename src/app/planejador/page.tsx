@@ -3,13 +3,14 @@
 
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { Destino, RotaData} from '@/types';
+import { Destino, RotaData, SelectedPlace} from '@/types';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 
 // Importando nossos novos componentes de UI
 import ConfirmationModal from '@/components/ConfirmationModal';
 import AddDestinationCard from '@/components/planner/AddDestinationCard';
+import EditDestinationModal from '@/components/planner/EditDestinationModal';
 import ItineraryCard from '@/components/planner/ItineraryCard';
 import RouteDetailsCard from '@/components/planner/RouteDetailsCard';
 import MapCard from '@/components/planner/MapCard';
@@ -23,6 +24,7 @@ export default function PlanejadorPage() {
     const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; destinoId: string | null }>({ isOpen: false, destinoId: null });
     const [mapCenter, setMapCenter] = useState({ lat: -14.235, lng: -51.925 });
     const [mapZoom, setMapZoom] = useState(4);
+    const [editModal, setEditModal] = useState<{ isOpen: boolean; destino: Destino | null }>({ isOpen: false, destino: null});
 
     // --- LÓGICA PRINCIPAL (FUNÇÕES) ---
     
@@ -58,6 +60,32 @@ export default function PlanejadorPage() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleOpenEditModal = (destino: Destino) => {
+        setEditModal({ isOpen: true, destino: destino });
+    };
+
+    const handleUpdateDestination = async (id: string, novosDados: SelectedPlace) => {
+        setIsSubmitting(true);
+        const promise = fetch(`/api/destinos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                nome: novosDados.nome,
+                latitude: novosDados.lat,
+                longitude: novosDados.lng 
+            }),
+        }).then(res => {
+            if (!res.ok) throw new Error('Falha ao atualizar');
+            return fetchDestinos();
+        });
+
+        toast.promise(promise, {
+            loading: 'Salvando alterações...',
+            success: 'Destino atualizado!',
+            error: 'Não foi possível salvar as alterações.',
+        }).finally(() => setIsSubmitting(false));
     };
 
     // Funções para deletar um destino (passadas para ItineraryCard e ConfirmationModal)
@@ -154,6 +182,7 @@ export default function PlanejadorPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
                     <ItineraryCard
                         destinos={destinos}
+                        onEdit={handleOpenEditModal}
                         onDelete={handleDelete}
                         onDragEnd={handleDragEnd}
                         isSubmitting={isSubmitting}
@@ -177,6 +206,13 @@ export default function PlanejadorPage() {
                     </p>
                 </footer>
             </main>
+
+            <EditDestinationModal
+                isOpen={editModal.isOpen}
+                onClose={() => setEditModal({ isOpen: false, destino: null })}
+                onSave={handleUpdateDestination}
+                destino={editModal.destino}
+            />
 
             <ConfirmationModal
                 isOpen={deleteModal.isOpen}

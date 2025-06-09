@@ -1,4 +1,4 @@
 {"nome":"Goiânia, GO, Brasil","latitude":-16.6868491,"longitude":-49.2707899,"ordem":2,"createdAt":{"$$date":1749493734243},"_id":"031Np7WyM8tw3sBo"}
-{"nome":"Aracaju, SE, Brasil","latitude":-10.9265404,"longitude":-37.0731147,"ordem":3,"createdAt":{"$$date":1749493742732},"_id":"BKufoMXx08PEFAg3"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749493723641},"_id":"X0UN6NhuDdawgPBD"}
+{"nome":"Fortaleza, CE, Brasil","latitude":-3.7327203,"longitude":-38.5270134,"ordem":3,"createdAt":{"$$date":1749493742732},"_id":"BKufoMXx08PEFAg3"}
 {"nome":"Manaus, AM, Brasil","latitude":-3.1190275,"longitude":-60.0217314,"ordem":4,"createdAt":{"$$date":1749493766335},"_id":"WFbTEPatKFfpJrVs"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749493723641},"_id":"X0UN6NhuDdawgPBD"}

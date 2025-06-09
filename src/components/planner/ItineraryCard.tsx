@@ -1,21 +1,22 @@
 // Em: src/components/planner/ItineraryCard.tsx
 'use client';
 
-import { DndContext, closestCenter, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableListItem } from './SortableListItem';
-import { FaListUl } from 'react-icons/fa';
 import { Destino } from '@/types';
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { FaListUl } from 'react-icons/fa';
+import { SortableListItem } from './SortableListItem';
 
 // Props que o componente recebe da página principal
 type ItineraryCardProps = {
   destinos: Destino[];
+  onEdit: (destino: Destino) => void;
   onDelete: (id: string) => void;
   onDragEnd: (event: DragEndEvent) => void;
   isSubmitting: boolean;
 };
 
-export default function ItineraryCard({ destinos, onDelete, onDragEnd, isSubmitting }: ItineraryCardProps) {
+export default function ItineraryCard({ destinos, onDelete, onDragEnd, isSubmitting, onEdit}: ItineraryCardProps) {
   // Sensores para o DND-Kit, permitindo arrastar com mouse e teclado
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -40,7 +41,8 @@ export default function ItineraryCard({ destinos, onDelete, onDragEnd, isSubmitt
               {destinos.map((destino) => (
                 <SortableListItem 
                   key={destino._id} 
-                  destino={destino} 
+                  destino={destino}
+                  onEdit={onEdit}
                   onDelete={onDelete} 
                   isSubmitting={isSubmitting}
                 />
