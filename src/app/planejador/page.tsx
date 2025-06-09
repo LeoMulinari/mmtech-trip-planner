@@ -121,22 +121,29 @@ export default function PlanejadorPage() {
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
-            setDestinos((items) => {
-                const oldIndex = items.findIndex((item) => item._id === active.id);
-                const newIndex = items.findIndex((item) => item._id === over.id);
-                
-                // Função auxiliar da dnd-kit que reordena o array para nós
-                const reorderedItems = arrayMove(items, oldIndex, newIndex);
-                
-                // Atualiza a propriedade 'ordem' de cada item
+            const oldIndex = destinos.findIndex((item) => item._id === active.id);
+            const newIndex = destinos.findIndex((item) => item._id === over.id);
+            
+            // Simula o reordenamento para verificação, sem alterar o estado ainda
+            const reorderedItems = arrayMove(destinos, oldIndex, newIndex);
+            const movedItem = reorderedItems[newIndex];
+
+            // --- NOVA VALIDAÇÃO AQUI ---
+            const prevItem = reorderedItems[newIndex - 1];
+            const nextItem = reorderedItems[newIndex + 1];
+
+            if ((prevItem && prevItem.nome === movedItem.nome) || (nextItem && nextItem.nome === movedItem.nome)) {
+                alert("Não é permitido ter dois destinos iguais em sequência.");
+                return; // Cancela a operação de reordenar
+            }
+
+            // Se a validação passar, aí sim atualizamos o estado
+            setDestinos(() => {
                 const updatedDestinos = reorderedItems.map((item, index) => ({
                     ...item,
                     ordem: index + 1,
                 }));
-
-                // Avisa o backend para salvar a nova ordem
                 updateOrdemNoBackend(updatedDestinos);
-
                 return updatedDestinos;
             });
         }
