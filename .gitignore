@@ -136,6 +136,7 @@ out/
 .LSOverride
 
 # NeDB database files 
+database/
 database/*.db
 
 # Turbopack

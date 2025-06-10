@@ -137,7 +137,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
    docker run -p 3000:3000 -d --name meu-planejador planejador-viagem
    ```
 
-6. Abra `http://localhost:3000` no seu navegador e aproveite!
+6. Abra `http://localhost:3000/planejador` no seu navegador e aproveite!
 
 ## 🔮 Melhorias Futuras
 
