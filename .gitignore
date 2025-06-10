@@ -154,3 +154,5 @@ playwright-report/
 
 # Storybook
 storybook-static
+
+production.env

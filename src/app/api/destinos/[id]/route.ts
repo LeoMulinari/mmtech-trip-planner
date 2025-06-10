@@ -1,25 +1,19 @@
-import { NextResponse } from 'next/server';
 import db from '@/lib/database';
+import { Destino } from '@/types'; // Assumindo que você moveu para /types
+import { NextResponse } from 'next/server';
 
-interface Destino {
-    _id?: string;         
-    nome: string; 
-    latitude: number;
-    longitude: number;
-    ordem: number;
-    createdAt: Date;
-}
-
-//  FUNÇÃO DELETE 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+// --- FUNÇÃO DELETE (Com assinatura 100% correta) ---
+export async function DELETE(
+    request: Request, 
+    context: { params: { id: string } } // MUDANÇA 1: Recebemos o 'context'
+) {
     try {
-        const idParaDeletar = params.id;
+        const idParaDeletar = context.params.id; // MUDANÇA 2: Pegamos o id de context.params
 
-        // Garante que o destino existe antes de fazer qualquer coisa
-        const destinoExiste = await new Promise((resolve, reject) => {
+        const destinoExiste: Destino | null = await new Promise((resolve, reject) => {
             db.findOne({ _id: idParaDeletar }, (err, doc) => {
                 if (err) reject(err);
-                else resolve(doc);
+                else resolve(doc as Destino | null);
             });
         });
 
@@ -27,7 +21,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             return NextResponse.json({ message: 'Destino não encontrado' }, { status: 404 });
         }
 
-        // Remove o destino do banco de dados
         await new Promise<void>((resolve, reject) => {
             db.remove({ _id: idParaDeletar }, {}, (err) => {
                 if (err) reject(err);
@@ -35,7 +28,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             });
         });
 
-        // Pega todos os destinos restantes, já ordenados
         const destinosRestantes: Destino[] = await new Promise((resolve, reject) => {
             db.find({}).sort({ ordem: 1 }).exec((err, docs) => {
                 if (err) reject(err);
@@ -43,7 +35,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             });
         });
 
-        // Reindexa a ordem de todos os itens restantes
         let novaOrdem = 1;
         for (const destino of destinosRestantes) {
             await new Promise<void>((resolve, reject) => {
@@ -58,15 +49,19 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         return NextResponse.json({ message: `Destino ${idParaDeletar} deletado com sucesso e a rota foi reordenada.` });
 
     } catch (error) {
-        console.error(`Erro ao deletar destino ${params.id}:`, error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`Erro ao deletar destino ${context.params.id}:`, errorMessage); // MUDANÇA 3: Usando context.params.id
         return NextResponse.json({ message: 'Erro ao deletar destino' }, { status: 500 });
     }
 }
 
-// FUNÇÃO PUT 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+// --- FUNÇÃO PUT (Com assinatura 100% correta) ---
+export async function PUT(
+    request: Request, 
+    context: { params: { id: string } } // MUDANÇA 1: Recebemos o 'context'
+) {
     try {
-        const idParaAtualizar = params.id;
+        const idParaAtualizar = context.params.id; // MUDANÇA 2: Pegamos o id de context.params
         const body = await request.json();
 
         delete body._id;
@@ -86,7 +81,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         return NextResponse.json({ message: `Destino ${idParaAtualizar} atualizado com sucesso.` });
 
     } catch (error) {
-        console.error(`Erro ao atualizar destino ${params.id}:`, error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`Erro ao atualizar destino ${context.params.id}:`, errorMessage); // MUDANÇA 3: Usando context.params.id
         return NextResponse.json({ message: 'Erro ao atualizar destino' }, { status: 500 });
     }
 }
