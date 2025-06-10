@@ -24,13 +24,12 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copia apenas os artefatos necessários para a imagem final.
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copia a pasta do banco de dados para dentro da imagem final.
-COPY database ./database
-COPY --chown=nextjs:nodejs database ./database
+RUN mkdir -p /app/database && chown -R nextjs:nodejs /app/database
 
 # Muda para o usuário não-root
 USER nextjs
