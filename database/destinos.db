@@ -1,4 +1,14 @@
+{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":6,"createdAt":{"$$date":1749506882796},"_id":"4bFG9mSidUgZNEpS"}
+{"nome":"Belo Horizonte, MG, Brasil","latitude":-19.919052,"longitude":-43.9386685,"ordem":2,"createdAt":{"$$date":1749506659679},"_id":"Fe1xEOn32zPU8xVL"}
 {"nome":"Manaus, AM, Brasil","latitude":-3.1190275,"longitude":-60.0217314,"ordem":1,"createdAt":{"$$date":1749493766335},"_id":"WFbTEPatKFfpJrVs"}
-{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749498541764},"_id":"jqacv9NPuoFZA3er"}
-{"nome":"Museu Oscar Niemeyer | MON, Curitiba, PR, Brasil","latitude":-25.4098994,"longitude":-49.2670599,"ordem":2,"createdAt":{"$$date":1749498653865},"_id":"Y3vKVbvZyBIchAds"}
-{"nome":"Jardim Botânico, Curitiba, PR, Brasil","latitude":-25.4414024,"longitude":-49.24871779999999,"ordem":3,"createdAt":{"$$date":1749498681185},"_id":"TN2gisCeLIXJyHdA"}
+{"nome":"Paris, IDF, França","latitude":48.8575475,"longitude":2.3513765,"ordem":4,"createdAt":{"$$date":1749506737809},"_id":"bZLP3LmKCX63klob"}
+{"nome":"Residencial Jardim das Araucárias, Ponta Grossa, PR, Brasil","latitude":-25.088432,"longitude":-50.0977891,"ordem":5,"createdAt":{"$$date":1749506773639},"_id":"gkZKSe0xm0Am0qrz"}
+{"nome":"Joaquim Távora, PR, Brasil","latitude":-23.4987508,"longitude":-49.925785,"ordem":3,"createdAt":{"$$date":1749506440626},"_id":"k08kl2UMQzuI9wHN"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749506369899},"_id":"nQClAqXYxJk0Ag9j"}
+{"nome":"Ponta Grossa, PR, Brasil","latitude":-25.0993784,"longitude":-50.1582927,"ordem":1,"createdAt":{"$$date":1749506369899},"_id":"nQClAqXYxJk0Ag9j"}
+{"nome":"Manaus, AM, Brasil","latitude":-3.1190275,"longitude":-60.0217314,"ordem":2,"createdAt":{"$$date":1749493766335},"_id":"WFbTEPatKFfpJrVs"}
+{"nome":"Belo Horizonte, MG, Brasil","latitude":-19.919052,"longitude":-43.9386685,"ordem":3,"createdAt":{"$$date":1749506659679},"_id":"Fe1xEOn32zPU8xVL"}
+{"nome":"Joaquim Távora, PR, Brasil","latitude":-23.4987508,"longitude":-49.925785,"ordem":4,"createdAt":{"$$date":1749506440626},"_id":"k08kl2UMQzuI9wHN"}
+{"nome":"Paris, IDF, França","latitude":48.8575475,"longitude":2.3513765,"ordem":5,"createdAt":{"$$date":1749506737809},"_id":"bZLP3LmKCX63klob"}
+{"nome":"Residencial Jardim das Araucárias, Ponta Grossa, PR, Brasil","latitude":-25.088432,"longitude":-50.0977891,"ordem":6,"createdAt":{"$$date":1749506773639},"_id":"gkZKSe0xm0Am0qrz"}
+{"nome":"Museu do Louvre, Paris, IDF, França","latitude":48.8606111,"longitude":2.337644,"ordem":7,"createdAt":{"$$date":1749506882796},"_id":"4bFG9mSidUgZNEpS"}
